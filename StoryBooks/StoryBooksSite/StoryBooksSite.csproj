@@ -61,19 +61,18 @@
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\JDGEngine.js" />
-    <Content Include="Scripts\LSBooks.js" />
+    <Content Include="Scripts\LSBook.js" />
     <Content Include="Scripts\LSButton.js" />
     <Content Include="Scripts\LSHUD.js" />
     <Content Include="Scripts\LSStoryBooks.js" />
     <Content Include="Scripts\LSTextEffects.js" />
     <Content Include="Web.config" />
+    <Content Include="Pages\Test.php" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Pages\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
