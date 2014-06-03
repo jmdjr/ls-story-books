@@ -31,6 +31,7 @@
         $this.addChild($this.buttonText);
 
         this.Text = function (text) {
+            debugger;
             if (text) {
                 $this.buttonText.text = text;
             }
