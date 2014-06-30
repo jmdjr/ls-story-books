@@ -66,6 +66,7 @@
     <Content Include="Scripts\LSHUD.js" />
     <Content Include="Scripts\LSStoryBooks.js" />
     <Content Include="Scripts\LSTextEffects.js" />
+    <Content Include="Scripts\piemenu.js" />
     <Content Include="Web.config" />
     <Content Include="Pages\Test.php" />
   </ItemGroup>
