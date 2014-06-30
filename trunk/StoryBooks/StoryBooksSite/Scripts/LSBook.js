@@ -22,6 +22,7 @@
         if (this.inherited_init) this.inherited_init();
 
         var $this = this;
+
         this.pages = [];
         this.loadPagesIntoEngine = function (book, engine) {
             $this.Engine = engine;
@@ -40,6 +41,7 @@
             var pageTypeId = page.PageTypeId;
             var pageName = "page" + pageId;
             $this.pages.push(pageName);
+
             $this.pages[$this.pages[$this.pages.length - 1]] = new jdge.State(function () {
                 var $pageState = this;
 
