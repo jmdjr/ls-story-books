@@ -1,8 +1,8 @@
-    (function(scope) {
-    var jdge = {};
+(function (scope) {
+    var jdge = scope.jdge || {};
     jdge._JD_DEBUG_ = false;
-    
-    jdge.Stage = function (height, width, target){
+
+    jdge.Stage = function (height, width, target) {
          this.initialize(height, width, target);
     }
     
