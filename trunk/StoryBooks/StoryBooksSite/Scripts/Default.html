@@ -1,21 +1,19 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Grid Manager</title>
+    <title>Train Game</title>
+    <script src="http://code.createjs.com/createjs-2013.12.12.min.js"></script>
     <script src="http://requirejs.org/docs/release/2.1.14/minified/require.js"></script>
     <script>
     requirejs.config({
-        //By default load any module IDs from js/lib
-        baseUrl: '~/Scripts/require',
-        //except, if the module ID starts with "app",
-        //load it from the js/app directory. paths
-        //config is relative to the baseUrl, and
-        //never includes a ".js" extension since
-        //the paths config could be for a directory.
+        baseUrl: '/Scripts/require',
         paths: {
-            app: '../app'
-    }
-});</script>
+            train: '../train'
+        }
+    });
+
+    requirejs(['train/Game']);
+    </script>
 </head>
 <body>
 </body>
