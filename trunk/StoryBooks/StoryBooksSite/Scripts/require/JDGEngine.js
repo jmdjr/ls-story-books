@@ -2,6 +2,10 @@
     var jdge = scope.jdge || {};
     jdge._JD_DEBUG_ = false;
 
+    jdge.IsUndefined = function (object) {
+        return typeof object === 'undefined' || object == null;
+    }
+
     jdge.Stage = function (height, width, target) {
          this.initialize(height, width, target);
     }
@@ -160,12 +164,23 @@
 				}
 				
 				return true;
+			},
+
+			Switch: function (endState, startState) {
+			    if (!jdge.IsUndefined(endState) && !jdge.IsUndefined(endState.alpha)) {
+			        endState.alpha = 1;
+			    }
+			    if (!jdge.IsUndefined(startState) && !jdge.IsUndefined(startState.alpha)) {
+			        startState.alpha = 0;
+			    }
+
+			    return true;
 			}
 		}
 		
 		this.Transition = this.stateTransitions.Fade;
 		
-        this.on('tick', function(){
+		this.on('tick', function () {
             if($this.transState) {
                 if(this.Transition($this.transState, $this.RunningState)) {
                     $this.removeChild($this.RunningState);                
@@ -174,6 +189,7 @@
                     $this.transState = null;
                 }
             }
+
             else if($this.RunningState) {
                 if(!$this.isPaused) {
                     $this.RunningState.onTick();

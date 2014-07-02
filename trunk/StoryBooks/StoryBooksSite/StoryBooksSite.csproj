@@ -58,8 +58,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\JDGEGrid.css" />
+    <Content Include="Content\simple title screen.png" />
     <Content Include="Scripts\Default.html" />
-    <Content Include="Scripts\require\JDGEGrid.js" />
+    <Content Include="Scripts\require\JDGEGridObject.js" />
+    <Content Include="Scripts\require\JDGEGridManager.js" />
     <Content Include="Scripts\require\JDGEngine.js" />
     <Content Include="Scripts\require\jquery.js" />
     <Content Include="Scripts\LSStoryBooks.html" />
@@ -71,8 +73,11 @@
     <Content Include="Scripts\LSHUD.js" />
     <Content Include="Scripts\LSStoryBooks.js" />
     <Content Include="Scripts\LSTextEffects.js" />
+    <Content Include="Scripts\require\LSButton.js" />
     <Content Include="Scripts\require\PieMenu.js" />
     <Content Include="Scripts\train\Game.js" />
+    <Content Include="Scripts\train\tracksRenderer.js" />
+    <Content Include="Scripts\train\trackTile.js" />
     <Content Include="Web.config" />
     <Content Include="Pages\Test.php" />
   </ItemGroup>
