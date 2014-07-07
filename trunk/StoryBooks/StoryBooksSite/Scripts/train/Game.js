@@ -13,7 +13,9 @@
         Game.loadState('GameScreen', new jdge.State(function () {
             this.addChild(new LS.Button("return", "TitleScreen", function () {
                 Game.gotoState("TitleScreen");
-            }));
+            }).position(300, 500));
+            var gridManager = new jdge.GridManager(this.Engine);
+            this.addChild(gridManager);
         }));
 
         Game.play();
