@@ -4,7 +4,7 @@
 //
 
 if (define) {
-    define(['jquery', 'JDGEEngine', 'JDGEGridObject'], function ($) {
+    define(['jquery', 'JDGEngine', 'JDGEGridObject'], function ($) {
         (function (scope) {
             var jdge = scope.jdge || {};
 
