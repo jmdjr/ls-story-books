@@ -61,37 +61,43 @@ if (define) {
 
                 this.addGrid = function (name, grid) {
                     $this.Grids.push(name);
-                    $this.Grids[name] = grid;
+                    $this.Grids[name] = new jdge.SimpleGridObject(grid);
                 }
 
                 this.selectGrid = function (name) {
                     if (!jdge.IsUndefined($this.Grids[name])) {
                         $this.selected_grid_name = name;
                     }
+                    return $this.selected_grid_name;
                 }
 
-                this.Draw = function (gridName) {
+                this.Draw = function (gridName, renderPattern) {
 
                     // If the grid name is not provided in the draw function, and there has not been a selected grid name,
                     //  select the first grid in the grid array.
                     if (jdge.IsUndefined(gridName) && $this.selected_grid_name == "") {
                         $this.selected_grid_name = $this.Grids[0];
                     }
-                    else if (jdge.IsUndefined(gridName)) {
+                    else if (!jdge.IsUndefined(gridName)) {
                         $this.selected_grid_name = gridName;
                     }
 
                     var grid = $this.Grids[$this.selected_grid_name];
-
                     if(jdge.IsUndefined(grid))
                     {
                         $.error('JDGE: GridManager: Error 0000 - Drawing failed due to non-existant grid being referenced.');
                     }
 
+                    var rendering = $this.RenderPattern;
+
+                    if (!jdge.IsUndefined(renderPattern) && typeof renderPattern === "function") {
+                        rendering = renderPattern;
+                    }
+
                     var h = w = 0;
                     while (h < grid.height) {
                         while (w < grid.width) {
-                            $this.RenderPattern(grid.getTileAt(w, h));
+                            rendering(grid.getTileAt(w, h));
                             ++w;
                         }
                         ++h;
@@ -105,6 +111,7 @@ if (define) {
                     return $this;
                 }
             }
+
 
             scope.jdge = jdge;
         }(window));

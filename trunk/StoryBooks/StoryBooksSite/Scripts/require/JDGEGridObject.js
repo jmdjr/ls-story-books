@@ -42,12 +42,12 @@ if (define) {
                 // writing mapper function to appropriate TileGeneration function
 
                 if (!mapper) {
-                    mapper = function (tileValue, x, y) { return new jdge.SimpleGridTile(tileValue, x, y); };
+                    mapper = function (tileValue, x, y) { return new jdge.SimpleGridTileObject(tileValue, x, y); };
                 }
                 else
                 {
                     var t_mapper = mapper;
-                    mapper = function (tileValue, x, y) { return new jdge.SimpleGridTile(t_mapper(tileValue), x, y); };
+                    mapper = function (tileValue, x, y) { return new jdge.SimpleGridTileObject(t_mapper(tileValue), x, y); };
                 }
 
                 var w = h = 0;
@@ -191,7 +191,7 @@ if (define) {
                 };
             }
 
-            jdge._NULL_TILE_ = new jdge.SimpleGridTileObject(null);
+            jdge._NULL_TILE_ = new jdge.SimpleGridTileObject(null, -1, -1);
 
             scope.jdge = jdge;
         }(window));
