@@ -15,7 +15,18 @@
                 Game.gotoState("TitleScreen");
             }).position(300, 500));
             var gridManager = new jdge.GridManager(this.Engine);
+
+            gridManager.addGrid("default", [
+                ['a', 'b', 'c', 'd', 'e'],
+                ['f', 'g', 'h', null, 'j'],
+                ['l', 'm', 'n', 'o', 'p', 'q']
+            ]);
+
             this.addChild(gridManager);
+
+            this.onTick = function () {
+                gridManager.Draw();
+            }
         }));
 
         Game.play();
