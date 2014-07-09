@@ -40,14 +40,7 @@ define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton'], function ($) {
             this.addChild(new LS.Button("select Third Grid", "Third Grid", selectGrids).position(400, 160));
             this.addChild(gridManager);
             
-            var data = {
-                framerate: 10,
-                images: ["/Content/TrainStrip.png"],
-                frames: { width: 60, height: 60 },
-                animations: { run: [0, 3]}
-            };
-            var spriteSheet = new createjs.SpriteSheet(data);
-            var animation = new createjs.Sprite(spriteSheet, "run");
+
             this.addChild(animation);
 
             this.onTick = function () {
