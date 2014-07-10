@@ -31,8 +31,16 @@
 
         this.addChild(this.Animation);
 
+        this.stop = function() {
+            $this.Animation.gotoAndPlay("still");
+        }
+
         this.run = function () {
-            $this.Animation.
+            $this.Animation.gotoAndPlay("running");
+        }
+
+        this.crash = function () {
+            $this.Animation.gotoAndPlay("crash");
         }
 
     };
