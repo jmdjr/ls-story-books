@@ -1,6 +1,6 @@
 ﻿var Game = null;
 
-define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton'], function ($) {
+define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton', 'train/train'], function ($) {
     $(function () {
 
         Game = new jdge.Engine(600, 800);
@@ -26,6 +26,7 @@ define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton'], function ($) {
                 [11, 12, 13, 14, 15],
                 [16, 17, 18, 19, 20]
             ]);
+
             gridManager.addGrid("Third Grid", [
                 ['test', 32, null, 'A', 'd'],
                 ['h', '6', true, { toString: function () { return 'my Value';}}, 'null'],
@@ -39,22 +40,17 @@ define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton'], function ($) {
             this.addChild(new LS.Button("select Second Grid", "Second Grid", selectGrids).position(400, 105));
             this.addChild(new LS.Button("select Third Grid", "Third Grid", selectGrids).position(400, 160));
             this.addChild(gridManager);
-            
-
-            this.addChild(animation);
-
+            var testingTrain = new TrainEngine();
+            this.addChild(testingTrain);
+            var starting = false;
+            debugger;
             this.onTick = function () {
+
                 gridManager.Draw();
+                testingTrain.turnLeft();
             }
         }));
 
         Game.play();
-
-
-        //var grid = new jdge.SimpleGrid([
-        //    ['a', 'b', 'c', 'd', 'e'],
-        //    ['f', 'g', 'h', null, 'j'],
-        //    ['l', 'm', 'n', 'o', 'p', 'q']
-        //]);
     });
 });

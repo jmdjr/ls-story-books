@@ -26,10 +26,15 @@
                 smolder: [6, 7, "smolder", 0.5]
             }
         };
+
         var spriteSheet = new createjs.SpriteSheet(animationSheet);
         this.Animation = new createjs.Sprite(spriteSheet, "still");
+        var Tween = createjs.Tween.get($this);
+        
+        this.Property = jdge.Property;
 
         this.addChild(this.Animation);
+        this.setTransform(30, 30, 1, 1, 0, 0, 0, 30, 30);
 
         this.stop = function() {
             $this.Animation.gotoAndPlay("still");
@@ -42,9 +47,15 @@
         this.crash = function () {
             $this.Animation.gotoAndPlay("crash");
         }
+        
+        this.turnLeft = function () {
+            var rot = $this.rotation;
+            Tween.to({ rotation: (rot + 90) }, 500);
+        }
 
+        this.setPosition = function (x, y) {
+            $this.x = x;
+            $this.y = y;
+        }
     };
-
-
-
 });
