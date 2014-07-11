@@ -6,22 +6,30 @@
         return typeof object === 'undefined' || object == null;
     }
 
+
+    // returns null if the hash provided is undefined or the name provided is anything but a string
+    jdge.hashPush = function (hash, name, value) {
+        if (jdge.IsUndefined(hash) || typeof name !== 'string') {
+            return null;
+        }
+
+        if (hash.indexOf(name) == -1) {
+            hash.push(name);
+        }
+
+        hash[name] = value;
+
+        return hash;
+    }
+
+    // generates a Props variable hash and enables adding and referencing the hash.
+    // Returns the Props variable.
     jdge.Property = function (name, value) {
         if (this.Props === undefined) {
             this.Props = [];
         }
 
-        if (!value) {
-            return this.Props[name];
-        }
-            
-        if(typeof name === 'string') {
-            if(!this.Props[name]) {
-                this.Props.push(name);
-            }
-                
-            this.Props[name] = value;
-        }
+        return jdge.hashPush(Props, name, value);
     }
 
     jdge.Stage = function (height, width, target) {
@@ -63,7 +71,6 @@
         this.addChild = function(child) {
             this.stage.addChild(child);
         }
-        
     }
 
 /*********************************************************************************************
@@ -86,6 +93,7 @@
         this.bounds = this.getBounds();
         this.preloader = new createjs.LoadQueue();
         this.Assets = [];
+        this.FrameCollections = [];
 
         this.Property = jdge.Property;
         
@@ -108,23 +116,25 @@
         }
         
         
-        // play game, starting from the named state.
-        this.play = function (name) {
-            if(name) {
-                $this.gotoState(name);
-            }
-            else {
-                $this.gotoState($this.States[0]);
+        // open's frameCollection named, brings it to front, and returns collection for chaining.
+        this.open = function (name) {
+
+            var openCollection = null;
+
+            if (jdge.IsUndefined(name)) {
+                var l = $this.FrameCollections.length - 1;
+                openCollection = $this.FrameCollections[l];
             }
         }
 		
-        this.FrameCollections = [];
 
-        this.addFrameCollection = function () {
+        this.addNewCollection = function (collectionName) {
+
             $.error('JDGE: Engine: Initialization error 0001 - FrameCollection initialized without a starting frame');
         }
 		
-		this.on('tick', function () {
+        this.on('tick', function () {
+
 		});
 
         this.Stage.addChild(this);
@@ -134,145 +144,92 @@
     /*********************************************************************************************
           Engine Construct for Frames and States, since these two contain similar functionality.
     *********************************************************************************************/
-    jdge.FrameCollection = function(name, FirstFrame) {
-        this.initialize(name, FirstFrame);
+    jdge.FrameCollection = function(name) {
+        this.initialize(name);
     }
 
     var p = jdge.FrameCollection.prototype = new createjs.Container();
     jdge.FrameCollection.prototype.inherited_init = jdge.FrameCollection.initialize;
     
-    p.initialize = function (name, FirstFrameName, FirstFrame) {
+    p.initialize = function (name) {
         if (this.inherited_init) this.inherited_init();
 
         var $this = this;
-
-
-
         this.Frames = [];
 
-        this.RunningFrame = null;    // the state which is displayed and ran while not paused.
-        this.transFrame = null;      // the state to transition into.
+        this.level = 0;
+
+        this.runningFrame = null;
+        this.nextFrame = null;
         this.isPaused = false;
+        this.runningTransition = false;
 
         // loads a state into the state hash, for safe keeping.
         this.addFrame = function (name, frame) {
             if (frame instanceof jdge.Frame) {
                 frame.Engine = $this;
-                if (!$this.Frames[name]) {
-                    $this.Frames.push(name);
-                    $this.Frames[name] = frame;
-                }
+                
+                jdge.hashPush($this.Frames, name, frame);
             }
             else if (typeof frame === "function") {
                 var newFrame = new jdge.Frame(frame);
                 newFrame.Engine = $this;
-                if (!$this.Frames[name]) {
-                    $this.Frames.push(name);
-                    $this.Frames[name] = newFrame;
-                }
+
+                jdge.hashPush($this.Frames, name, newFrame);
             }
         }
-
-        if (FirstFrame) {
-            this.addFrame(FirstFrameName, FirstFrame);
-        }
-        else {
-
-        }
-
-        this.stateTransitions = {
-            Fade: function (endState, startState) {
-                if (endState.alpha < 1) {
-                    endState.alpha += 0.05;
-                    if (startState) {
-                        startState.alpha = 1 - endState.alpha;
-                    }
-                    return false;
-                }
-
-                return true;
-            },
-
-            Switch: function (endState, startState) {
-                if (!jdge.IsUndefined(endState) && !jdge.IsUndefined(endState.alpha)) {
-                    endState.alpha = 1;
-                }
-                if (!jdge.IsUndefined(startState) && !jdge.IsUndefined(startState.alpha)) {
-                    startState.alpha = 0;
-                }
-
-                return true;
-            }
-        }
-
 
         // moves the currently running state to the one being named.
         this.gotoFrame = function (name) {
-            if ($this.States[name] && !$this.transState) {
-                $this.transState = $this.States[name];
-                $this.transState.alpha = 0;
+            if ($this.Frames[name] && !$this.nextFrame) {
+                $this.nextFrame = $this.Frames[name];
                 $this.isPaused = true;
-                $this.addChild($this.transState);
-            }
-        }
-        // loads a frame into the frame hash.
-        this.loadFrame = function (name, state) {
-            if (state instanceof jdge.State) {
-                state.Engine = $this;
-                if (!$this.Frames[name]) {
-                    $this.Frames.push(name);
-                    $this.Frames[name] = state;
-                }
+                $this.addChild($this.nextFrame);
             }
         }
 
         this.RunCollection = function () {
-
-            if ($this.transState) {
-                if (this.Transition($this.transState, $this.RunningState)) {
-                    $this.removeChild($this.RunningState);
-                    $this.RunningState = $this.transState;
-                    $this.isPaused = false;
-                    $this.transState = null;
+            if ($this.nextFrame) {
+                if (!$this.runningTransition) {
+                    $this.runningFrame.transitionOut
+                    $this.nextFrame.transitionIn().call(function () {
+                        $this.remove$this.runningFrame);
+                        $this.nextFrame
+                    }, null, $this);
                 }
             }
-
-            else if ($this.RunningState) {
+            else if ($this.runningFrame) {
                 if (!$this.isPaused) {
-                    $this.RunningState.onTick();
+                    $this.runningFrame.update();
                 }
             }
         }
         
     }
 
-
-    /*********************************************************************************************
-          Engine Construct for Frames and States, since these two contain similar functionality.
-    *********************************************************************************************/
-    jdge.EngineConstructContainer = function (initializer) {
-        var $this = this;
-        this.Engine = null;
-
-        this.asset = function (name) {
-            debugger;
-            if (this.Engine) {
-                this.Engine.getAsset(name);
-            }
-        }
-
-        this.onTick = function () {
-
-        }
-
-        if (initializer && typeof initializer === 'function') {
-            initializer.call(this);
-        }
-    }
-
 /*********************************************************************************************
         Frame Constructor
 *********************************************************************************************/
+    jdge.FrameTransitions = {
+
+        // Transitions meant for making Frames appear
+        ins: {
+            Fade: function () {
+                this.alpha = 0;
+                this._Tween.to({ alpha: 1 }, this.TransitionInDuration);
+                return this._Tween;
+            }
+        },
+
+        // Transitions meant for making Frames disappear
+        outs: {
+            Fade: function () {
+                this.alpha = 1;
+                this._Tween.to({ alpha: 0 }, this.TransitionOutDuration);
+                return this._Tween;
+            }
+        }
+    }
 
     jdge.Frame = function(initializer){
          this.initialize(initializer);
@@ -282,9 +239,38 @@
     jdge.Frame.prototype.inherited_init = p.initialize;
     
     jdge.Frame.prototype.initialize = function (initializer) {
-        if(this.inherited_init) this.inherited_init();
-        jdge.EngineConstructContainer.call(this, initializer);        
+        if (this.inherited_init) this.inherited_init();
+
         var $this = this;
+        this.Engine = null;
+        this._Tween = createjs.Tween.get(this);
+
+        this.transitionIn = jdge.FrameTransitions.in.Fade;
+        this.transitionInDuration = 1000;
+
+        this.transitionOut = jdge.FrameTransitions.out.Fade;
+        this.transitionOutDuration = 1000;
+
+        this.asset = function (name) {
+            debugger;
+            if ($this.Engine) {
+                $this.Engine.getAsset(name);
+            }
+        }
+
+
+        //Called immidiately before running enterTansition
+        this.enter = function () { };
+
+        //Called on every tick
+        this.update = function () { };
+
+        //Called immidiately after running exitTransition
+        this.exit = function () { };
+
+        if (typeof initializer === 'function') {
+            initializer.call(this);
+        }
     }
     
     scope.jdge = jdge;
