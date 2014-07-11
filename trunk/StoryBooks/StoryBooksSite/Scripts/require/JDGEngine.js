@@ -17,7 +17,9 @@
             hash.push(name);
         }
 
-        hash[name] = value;
+        if (!jdge.IsUndefined(value)) {
+            hash[name] = value;
+        }
 
         return hash;
     }
@@ -31,6 +33,28 @@
 
         return jdge.hashPush(Props, name, value);
     }
+
+    jdge.FrameTransitions = {
+
+        // Transitions meant for making Frames appear
+        in: {
+            Fade: function () {
+                this.alpha = 0;
+                this._Tween.to({ alpha: 1 }, this.TransitionInDuration);
+                return this._Tween;
+            }
+        },
+
+        // Transitions meant for making Frames disappear
+        out: {
+            Fade: function () {
+                this.alpha = 1;
+                this._Tween.to({ alpha: 0 }, this.TransitionOutDuration);
+                return this._Tween;
+            }
+        }
+    }
+
 
     jdge.Stage = function (height, width, target) {
          this.initialize(height, width, target);
@@ -94,7 +118,7 @@
         this.preloader = new createjs.LoadQueue();
         this.Assets = [];
         this.FrameCollections = [];
-
+        this.RunningFrameCollections = [];
         this.Property = jdge.Property;
         
         this.preloader.on('fileload', function(target, type, item, result){
@@ -115,30 +139,67 @@
             $this.preloader.load();
         }
         
-        
-        // open's frameCollection named, brings it to front, and returns collection for chaining.
-        this.open = function (name) {
+        this.addNewCollection = function (collectionName, startRunning) {
+            var newFC = new jdge.FrameCollection(collectionName);
+            var collection = jdge.hashPush($this.FrameCollections, collectionName, newFC);
+            if ($this.FrameCollections.indexOf(collectionName) == -1) {
+                return null;
+            }
 
-            var openCollection = null;
+            $this.FrameCollections[collectionName].Engine = $this;
 
-            if (jdge.IsUndefined(name)) {
-                var l = $this.FrameCollections.length - 1;
-                openCollection = $this.FrameCollections[l];
+            if (startRunning) {
+                return this.runFrameCollection(collectionName);
+            }
+
+            return null;
+            //$.error('JDGE: Engine: Initialization error 0001 - FrameCollection initialized without a starting frame');
+        }
+
+        this.runFrameCollection = function (collectionName) {
+
+            if ($this.FrameCollections.indexOf(collectionName) != -1) {
+
+                var FC = $this.FrameCollections[collectionName];
+                $this.addChild(FC);
+
+                FC.enter();
+                FC.transitionIn().call(function () {
+                    jdge.hashPush($this.RunningFrameCollections, collectionName, this);
+                }, null, FC);
+
+                return FC;
+            }
+
+            return null;
+        }
+
+        this.haultFrameCollection = function (collectionName) {
+            var FCIndex = $this.FrameCollections.indexOf(collectionName);
+
+            if (FCIndex != -1) {
+
+                var FC = $this.RunningFrameCollections.slice(FCIndex, 1);
+
+                FC.transitionOut().call(function () { 
+                    this.exit();
+                    $this.removeChild(this);
+                }, null, FC);
+
+                return FC;
             }
         }
 		
-
-        this.addNewCollection = function (collectionName) {
-
-            $.error('JDGE: Engine: Initialization error 0001 - FrameCollection initialized without a starting frame');
-        }
-		
         this.on('tick', function () {
-
+            $this.RunningFrameCollections.forEach(function (item) {
+                $this.RunningFrameCollections[item].update();
+            });
 		});
 
         this.Stage.addChild(this);
         this.super_addchild = this.addChild;
+
+        return $this;
     }
 
     /*********************************************************************************************
@@ -155,6 +216,7 @@
         if (this.inherited_init) this.inherited_init();
 
         var $this = this;
+        this.Engine = null;
         this.Frames = [];
 
         this.level = 0;
@@ -162,25 +224,41 @@
         this.runningFrame = null;
         this.nextFrame = null;
         this.isPaused = false;
-        this.runningTransition = false;
+
+        this._Tween = createjs.Tween.get(this);
+
+        this.transitionIn = jdge.FrameTransitions.in.Fade;
+        this.transitionInDuration = 1000;
+
+        this.transitionOut = jdge.FrameTransitions.out.Fade;
+        this.transitionOutDuration = 1000;
 
         // loads a state into the state hash, for safe keeping.
-        this.addFrame = function (name, frame) {
+        this.add = function (name, frame) {
+            var newFrame = null;
+
+            if (jdge.IsUndefined(frame)) {
+                $.error('JDGE: FrameCollection: Initialization error 0003 - New Frame added is undefined');
+            }
+
             if (frame instanceof jdge.Frame) {
-                frame.Engine = $this;
-                
-                jdge.hashPush($this.Frames, name, frame);
+                newFrame = jdge.Frame;
             }
             else if (typeof frame === "function") {
-                var newFrame = new jdge.Frame(frame);
-                newFrame.Engine = $this;
+                newFrame = new jdge.Frame(frame);
+            }
 
-                jdge.hashPush($this.Frames, name, newFrame);
+            newFrame.Engine = $this.Engine;
+            var frames = jdge.hashPush($this.Frames, name, newFrame);
+
+            // this frame is its first...
+            if (frames.length == 1) {
+                this.nextFrame = newFrame;
             }
         }
 
         // moves the currently running state to the one being named.
-        this.gotoFrame = function (name) {
+        this.goto = function (name) {
             if ($this.Frames[name] && !$this.nextFrame) {
                 $this.nextFrame = $this.Frames[name];
                 $this.isPaused = true;
@@ -188,14 +266,44 @@
             }
         }
 
-        this.RunCollection = function () {
+        var runningTransition = false;
+        var transitions = 0;
+
+        this.update = function () {
+
+            if (transitions == 0 && $this.runningTransition) {
+                $this.runningTransition = false;
+                $this.runningFrame = $this.nextFrame;
+                $this.nextFrame = null;
+            }
+
             if ($this.nextFrame) {
                 if (!$this.runningTransition) {
-                    $this.runningFrame.transitionOut
-                    $this.nextFrame.transitionIn().call(function () {
-                        $this.remove$this.runningFrame);
-                        $this.nextFrame
-                    }, null, $this);
+                    $this.runningTransition = true;
+
+                    if ($this.runningFrame instanceof jdge.Frame && typeof $this.runningFrame.transitionOut === "function") {
+                        ++transitions;
+                        $this.runningFrame.transitionOut().call(function () {
+                            --transitions;
+                            $this.removeChild($this.runningFrame);
+                        }, null, $this);
+                    }
+                    else {
+                        $this.removeChild($this.runningFrame);
+                    }
+
+                    if ($this.nextFrame instanceof jdge.Frame && typeof $this.nextFrame.transitionIn === "function") {
+                        if ($this.nextFrame instanceof createjs.DisplayObject) {
+                            ++transitions;
+                            $this.addChild($this.nextFrame);
+                            $this.nextFrame.transitionIn().call(function () {
+                                --transitions;
+                            }, null, $this);
+                        }
+                    }
+                    else {
+                        $this.addChild($this.nextFrame);
+                    }
                 }
             }
             else if ($this.runningFrame) {
@@ -204,33 +312,18 @@
                 }
             }
         }
-        
+
+
+
+        this.enter = function () { }
+        this.exit = function () { }
+        return $this;
     }
 
 /*********************************************************************************************
         Frame Constructor
 *********************************************************************************************/
-    jdge.FrameTransitions = {
-
-        // Transitions meant for making Frames appear
-        ins: {
-            Fade: function () {
-                this.alpha = 0;
-                this._Tween.to({ alpha: 1 }, this.TransitionInDuration);
-                return this._Tween;
-            }
-        },
-
-        // Transitions meant for making Frames disappear
-        outs: {
-            Fade: function () {
-                this.alpha = 1;
-                this._Tween.to({ alpha: 0 }, this.TransitionOutDuration);
-                return this._Tween;
-            }
-        }
-    }
-
+    
     jdge.Frame = function(initializer){
          this.initialize(initializer);
     }
@@ -271,6 +364,8 @@
         if (typeof initializer === 'function') {
             initializer.call(this);
         }
+
+        return $this;
     }
     
     scope.jdge = jdge;
