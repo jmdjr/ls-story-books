@@ -4,14 +4,16 @@ define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton', 'train/train'], fu
     $(function () {
 
         Game = new jdge.Engine(600, 800);
-        Game.loadState('TitleScreen', new jdge.State(function () {
+        var MenusFC = Game.addNewCollection('Menus', true);
+
+        MenusFC.add('TitleScreen', function () {
             this.addChild(new createjs.Bitmap('/Content/simple title screen.png'));
             this.addChild(new LS.Button("Play", "GameScreen", function () {
-                Game.gotoState("GameScreen");
+                MenusFC.goto("GameScreen");
             }).position(300, 400));
-        }));
+        });
 
-        Game.loadState('GameScreen', new jdge.State(function () {
+        MenusFC.add('GameScreen', function () {
             var gridManager = new jdge.GridManager(this.Engine);
 
             gridManager.addGrid("First Grid", [
@@ -31,7 +33,7 @@ define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton', 'train/train'], fu
                 ['test', 32, null, 'A', 'd'],
                 ['h', '6', true, { toString: function () { return 'my Value';}}, 'null'],
                 ['object', false, 'ignore me', new LS.Button("return", "TitleScreen", function () {
-                    Game.gotoState("TitleScreen");
+                    MenusFC.goto("TitleScreen");
                 }).position(0, 0), 'p', 'q']
             ]);
 
@@ -43,14 +45,11 @@ define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton', 'train/train'], fu
             var testingTrain = new TrainEngine();
             this.addChild(testingTrain);
             var starting = false;
-            debugger;
-            this.onTick = function () {
 
+            this.update = function () {
                 gridManager.Draw();
                 testingTrain.turnLeft();
             }
-        }));
-
-        Game.play();
+        });
     });
 });
