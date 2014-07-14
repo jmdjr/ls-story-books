@@ -18,7 +18,6 @@ if (define) {
             p.initialize = function (Engine, tileRenderer) {
                 if (this.inherited_init) this.inherited_init();
                 var $this = this;
-
                 this.Grids = [];
                 this.RenderedTiles = [];
                 this.Engine = Engine;
@@ -32,7 +31,7 @@ if (define) {
                 this.RenderingPatterns = {
                     Square: function (tile) {
                         // height and width of each tile
-                        var height = 50, width = 50;
+                        var height = 60, width = 60;
 
                         var tileContainer = new createjs.Container();
                         tileContainer.height = height;
@@ -59,17 +58,18 @@ if (define) {
 
                 if (tileRenderer && typeof tileRenderer === 'function') {
                     this.RenderPattern = tileRenderer;
-                }
+                }   
 
-                this.addGrid = function (name, grid) {
+                this.addGrid = function (name, grid, mapper) {
                     $this.Grids.push(name);
-                    $this.Grids[name] = new jdge.SimpleGridObject(grid);
+                    $this.Grids[name] = new jdge.SimpleGridObject(grid, mapper);
                 }
 
                 this.selectGrid = function (name) {
                     if (!jdge.IsUndefined($this.Grids[name])) {
                         $this.selected_grid_name = name;
                         $this.clearGridTiles();
+                        $this.Draw();
                     }
 
                     return $this.selected_grid_name;
@@ -82,6 +82,12 @@ if (define) {
                         tile = this.RenderedTiles.pop();
                     }
                 }
+
+                this.currentGrid = function () {
+                    if (!jdge.IsUndefined($this.Grids[$this.selected_grid_name])) {
+                        return $this.Grids[$this.selected_grid_name];
+                    }
+                };
 
                 this.Draw = function (gridName, renderPattern) {
                     if ($this.RenderedTiles.length == 0) {

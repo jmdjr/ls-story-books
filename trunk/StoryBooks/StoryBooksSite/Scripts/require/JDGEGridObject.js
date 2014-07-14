@@ -100,8 +100,6 @@ if (define) {
                 this.isTile = function (object) { return object instanceof jdge.SimpleGridTileObject; }
 
                 this.getTileAt = function (w, h) {
-                    w -= 1;
-                    h -= 1;
                     var tracer = $this.Tiles[h];
                     if (tracer) {
                         tracer = tracer[w];

@@ -6,6 +6,18 @@
         return typeof object === 'undefined' || object == null;
     }
 
+    //jdge.Dictionary = function () {
+    //    var _d = [];
+
+    //    this.push = function (name, value) {
+    //        jdge.hashPush(this._d, name, value);
+    //    }
+
+    //    this.get = function (name) {
+
+    //    }
+    //}
+
 
     // returns null if the hash provided is undefined or the name provided is anything but a string
     jdge.hashPush = function (hash, name, value) {
@@ -34,14 +46,15 @@
         return jdge.hashPush(Props, name, value);
     }
 
+    // transitions used by any Transitionable object.  
+    // a 'transitionable' object is any object that calls 'MakeTransitionable' function below.
     jdge.FrameTransitions = {
 
         // Transitions meant for making Frames appear
         in: {
             Fade: function () {
                 this.alpha = 0;
-                this._Tween.to({ alpha: 1 }, this.TransitionInDuration);
-                return this._Tween;
+                return this._Tween().to({ alpha: 1 }, this.transitionInDuration)
             }
         },
 
@@ -49,12 +62,63 @@
         out: {
             Fade: function () {
                 this.alpha = 1;
-                this._Tween.to({ alpha: 0 }, this.TransitionOutDuration);
-                return this._Tween;
+                return this._Tween().to({ alpha: 0 }, this.transitionOutDuration);
             }
         }
     }
 
+    // adds functions and variables related to transitionable container.
+    jdge.MakeTransitionable = function () {
+
+        this._Tween = function () { return createjs.Tween.get(this); };
+
+        this.transitionIn = jdge.FrameTransitions.in.Fade;
+        this.transitionInDuration = 1000;
+
+        this.transitionOut = jdge.FrameTransitions.out.Fade;
+        this.transitionOutDuration = 1000;
+
+        //Called immidiately before running enterTansition
+        this.enter = function () { };
+
+        //Called on every tick
+        this.update = function () { };
+
+        //Called immidiately after running exitTransition
+        this.exit = function () { };
+
+        // combines the enter and transitionIn funcitonality 
+        this.enterIn = function (enterCall) {
+            this.mouseChildren = false;
+
+            this.enter();
+            if (typeof this.transitionIn === "function") {
+
+                this.transitionIn().call(function () {
+                    this.mouseChildren = true;
+                    if (typeof enterCall === "function") {
+                        enterCall(this);
+                    }
+                });
+            }
+        };
+
+        // combines the exit and transitionOut functionality
+        this.exitOut = function (exitCall) {
+
+            this.mouseChildren = false;
+            if (typeof this.transitionOut === "function") {
+
+                this.transitionOut().call(function () {
+                    this.exit();
+                    this.mouseChildren = true;
+                    if (typeof exitCall === "function") {
+                        exitCall(this);
+                    }
+                }, null, this);
+            }
+        };
+    }
 
     jdge.Stage = function (height, width, target) {
          this.initialize(height, width, target);
@@ -180,6 +244,7 @@
             if (FCIndex != -1) {
 
                 var FC = $this.RunningFrameCollections.slice(FCIndex, 1);
+                FC.isPaused = true;
 
                 FC.transitionOut().call(function () { 
                     this.exit();
@@ -221,19 +286,13 @@
 
         this.level = 0;
 
-        this.runningFrame = null;
-        this.nextFrame = null;
         this.isPaused = false;
+        this.runningFrame = null;
 
-        this._Tween = createjs.Tween.get(this);
+        // adds transition functionality.
+        jdge.MakeTransitionable.call(this);
 
-        this.transitionIn = jdge.FrameTransitions.in.Fade;
-        this.transitionInDuration = 1000;
-
-        this.transitionOut = jdge.FrameTransitions.out.Fade;
-        this.transitionOutDuration = 1000;
-
-        // loads a state into the state hash, for safe keeping.
+        // loads a Frame into the state hash, for safe keeping.
         this.add = function (name, frame) {
             var newFrame = null;
 
@@ -253,67 +312,57 @@
 
             // this frame is its first...
             if (frames.length == 1) {
-                this.nextFrame = newFrame;
+                this.goto(name);
             }
         }
 
         // moves the currently running state to the one being named.
-        this.goto = function (name) {
-            if ($this.Frames[name] && !$this.nextFrame) {
-                $this.nextFrame = $this.Frames[name];
+        this.goto = function (frameName, wait4RunningFrame) {
+
+            if ($this.Frames.indexOf(frameName) == -1) {
+                $.error("JDGE: FrameCollection: 0000 - Goto: 'frameName' not found.");
+            }
+        
+            var nextFrame = $this.Frames[frameName];
+
+            if (!(nextFrame instanceof jdge.Frame)) {
+                $.error("JDGE: FrameCollection: 0001 - Goto: Frame failed to be retrieved.");
+            }
+
+            var nextFrameEnter = function () {
+                $this.addChild(nextFrame);
+                nextFrame.enterIn(function (Frame) {
+                    $this.runningFrame = Frame;
+                });
+            }
+
+            if (!jdge.IsUndefined($this.runningFrame)) {
                 $this.isPaused = true;
-                $this.addChild($this.nextFrame);
+                if (wait4RunningFrame) {
+                    $this.runningFrame.exitOut(function (Frame) {
+                        $this.removeChild(Frame);
+                        nextFrameEnter();
+                        $this.isPaused = false;
+                    });
+                }
+                else {
+                    $this.runningFrame.exitOut(function (Frame) {
+                        $this.removeChild(Frame);
+                        $this.isPaused = false;
+                    });
+                    nextFrameEnter();
+                }
+            }
+            else {
+                nextFrameEnter();
             }
         }
-
-        var runningTransition = false;
-        var transitions = 0;
 
         this.update = function () {
-
-            if (transitions == 0 && $this.runningTransition) {
-                $this.runningTransition = false;
-                $this.runningFrame = $this.nextFrame;
-                $this.nextFrame = null;
-            }
-
-            if ($this.nextFrame) {
-                if (!$this.runningTransition) {
-                    $this.runningTransition = true;
-
-                    if ($this.runningFrame instanceof jdge.Frame && typeof $this.runningFrame.transitionOut === "function") {
-                        ++transitions;
-                        $this.runningFrame.transitionOut().call(function () {
-                            --transitions;
-                            $this.removeChild($this.runningFrame);
-                        }, null, $this);
-                    }
-                    else {
-                        $this.removeChild($this.runningFrame);
-                    }
-
-                    if ($this.nextFrame instanceof jdge.Frame && typeof $this.nextFrame.transitionIn === "function") {
-                        if ($this.nextFrame instanceof createjs.DisplayObject) {
-                            ++transitions;
-                            $this.addChild($this.nextFrame);
-                            $this.nextFrame.transitionIn().call(function () {
-                                --transitions;
-                            }, null, $this);
-                        }
-                    }
-                    else {
-                        $this.addChild($this.nextFrame);
-                    }
-                }
-            }
-            else if ($this.runningFrame) {
-                if (!$this.isPaused) {
-                    $this.runningFrame.update();
-                }
+            if (!$this.isPaused && !jdge.IsUndefined($this.runningFrame)) {
+                $this.runningFrame.update();
             }
         }
-
-
 
         this.enter = function () { }
         this.exit = function () { }
@@ -336,30 +385,15 @@
 
         var $this = this;
         this.Engine = null;
-        this._Tween = createjs.Tween.get(this);
 
-        this.transitionIn = jdge.FrameTransitions.in.Fade;
-        this.transitionInDuration = 1000;
-
-        this.transitionOut = jdge.FrameTransitions.out.Fade;
-        this.transitionOutDuration = 1000;
+        jdge.MakeTransitionable.call(this);
 
         this.asset = function (name) {
             debugger;
             if ($this.Engine) {
                 $this.Engine.getAsset(name);
             }
-        }
-
-
-        //Called immidiately before running enterTansition
-        this.enter = function () { };
-
-        //Called on every tick
-        this.update = function () { };
-
-        //Called immidiately after running exitTransition
-        this.exit = function () { };
+        };
 
         if (typeof initializer === 'function') {
             initializer.call(this);
