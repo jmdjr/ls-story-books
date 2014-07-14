@@ -18,7 +18,6 @@
     p.initialize = function (buttonText, buttonValue, buttonClickEvent) {
         if (this.inherited_init) this.inherited_init();
         var $this = this;
-
         this.fontStyle = "12px Arial";
 
         this.setBounds(0, 0, 125, 30);
@@ -69,12 +68,19 @@
 
         this.reuseButton(buttonText, buttonValue);
 
-        this.on('mousedown', function (e) {
-            if (buttonClickEvent) {
-                e.Button = $this;
-                buttonClickEvent(e);
-            }
-        });
+
+        this.enableClick = function () {
+            $this.on('click', function (e) {
+                if (buttonClickEvent) {
+                    e.Button = $this;
+                    buttonClickEvent(e);
+                }
+            });
+        };
+
+        this.disableClick = function () {
+            $this.off('click');
+        };
 
         this.position = function (x, y) {
             $this.x = x;
@@ -82,6 +88,8 @@
 
             return $this;
         }
+
+        this.enableClick();
     }
 
     scope.LS = LS;

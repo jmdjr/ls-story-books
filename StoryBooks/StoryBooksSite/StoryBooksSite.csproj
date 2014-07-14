@@ -59,6 +59,7 @@
   <ItemGroup>
     <Content Include="Content\JDGEGrid.css" />
     <Content Include="Content\simple title screen.png" />
+    <Content Include="Content\tracks.png" />
     <Content Include="Content\TrainStrip.png" />
     <Content Include="Scripts\Default.html" />
     <Content Include="Scripts\require\JDGEGridObject.js" />
@@ -77,8 +78,8 @@
     <Content Include="Scripts\require\LSButton.js" />
     <Content Include="Scripts\require\PieMenu.js" />
     <Content Include="Scripts\train\Game.js" />
-    <Content Include="Scripts\train\tracksRenderer.js" />
-    <Content Include="Scripts\train\trackTile.js" />
+    <Content Include="Scripts\train\TrackTile.js" />
+    <Content Include="Scripts\train\track.js" />
     <Content Include="Scripts\train\train.js" />
     <Content Include="Web.config" />
     <Content Include="Pages\Test.php" />

@@ -1,55 +1,53 @@
 ﻿var Game = null;
 
-define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton', 'train/train'], function ($) {
+define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton', 'train/train', 'train/track'], function ($) {
     $(function () {
 
         Game = new jdge.Engine(600, 800);
         var MenusFC = Game.addNewCollection('Menus', true);
 
-        MenusFC.add('TitleScreen', function () {
-            this.addChild(new createjs.Bitmap('/Content/simple title screen.png'));
-            this.addChild(new LS.Button("Play", "GameScreen", function () {
-                MenusFC.goto("GameScreen");
-            }).position(300, 400));
-        });
+        //MenusFC.add('TitleScreen', function () {
+        //    var testButton = new LS.Button("Play", "GameScreen", function () {
+        //        MenusFC.goto("GameScreen", false);
+        //    }).position(300, 400);
+
+        //    this.addChild(new createjs.Bitmap('/Content/simple title screen.png'));
+        //    this.addChild(testButton);
+        //});
 
         MenusFC.add('GameScreen', function () {
             var gridManager = new jdge.GridManager(this.Engine);
 
-            gridManager.addGrid("First Grid", [
-                ['a', 'b', 'c', 'd', 'e'],
-                ['f', 'g', 'h', null, 'j'],
-                ['l', 'm', 'n', 'o', 'p', 'q']
-            ]);
-
             gridManager.addGrid("Second Grid", [
-                [1, 2, 3, 4, 5],
-                [6, 7, 8, 9, 10],
-                [11, 12, 13, 14, 15],
-                [16, 17, 18, 19, 20]
-            ]);
+                [10, 13, 13, 13, 11],
+                [14, 10, 13, 13, 12],
+                [14, 14, 10, 11,  6],
+                [ 4,  9, 12,  9, 12]
+            ], function (id) { return new trainGame.Track(id); });
 
-            gridManager.addGrid("Third Grid", [
-                ['test', 32, null, 'A', 'd'],
-                ['h', '6', true, { toString: function () { return 'my Value';}}, 'null'],
-                ['object', false, 'ignore me', new LS.Button("return", "TitleScreen", function () {
-                    MenusFC.goto("TitleScreen");
-                }).position(0, 0), 'p', 'q']
-            ]);
+            gridManager.selectGrid("Second Grid");
 
-            var selectGrids = function (e) { gridManager.selectGrid(e.Button.value); };
-            this.addChild(new LS.Button("select First Grid", "First Grid", selectGrids).position(400, 50));
-            this.addChild(new LS.Button("select Second Grid", "Second Grid", selectGrids).position(400, 105));
-            this.addChild(new LS.Button("select Third Grid", "Third Grid", selectGrids).position(400, 160));
             this.addChild(gridManager);
-            var testingTrain = new TrainEngine();
-            this.addChild(testingTrain);
-            var starting = false;
 
-            this.update = function () {
+            this.testingTrain = new trainGame.TrainEngine(gridManager);
+
+            gridManager.addChild(this.testingTrain);
+
+            this.enter = function () {
+                this.testingTrain.start();
                 gridManager.Draw();
-                testingTrain.turnLeft();
             }
+
+            var shape = new createjs.Shape();
+            shape.graphics.moveTo(240,30).s("#000000").curveTo(270, 30,270,60).es();
+            
+            this.addChild(shape);
+            this.update = function () {
+                gridManager.setChildIndex(this.testingTrain, gridManager.children.length - 1);
+            }
+
+            this.scaleX = 2;
+            this.scaleY = 2;
         });
     });
 });
