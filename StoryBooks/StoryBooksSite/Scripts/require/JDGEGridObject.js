@@ -121,7 +121,6 @@ if (define) {
                     }
 
                     var tracer = $this.Tiles[tile.coords.y + yoffset];
-                    debugger;
                     if (tracer) {
                         tracer = tracer[tile.coords.x + xoffset];
 

@@ -17,7 +17,7 @@
                 start: 8,
                 end: 12,
                 startLaunch: [8, 11, "running"],
-                endArrive: [12, 15]
+                endArrive: [12, 15, false]
             }
         };
 
@@ -55,6 +55,31 @@
                 return $this;
             }
 
+            this.nextTile = function () {
+
+                var track = this.currentTrack();
+
+                if (track.trackType == "Start") {
+                    currentDirection = track.sideA;
+                    return this.grid[currentDirection](this.currentTile);
+                }
+                else if (track.trackType == "End") {
+                    currentDirection = trainGame.Direction.opposite(track.sideA);
+                    return null;
+                }
+                else {
+                    currentDirection = (trainGame.Direction.opposite(currentDirection) == track.sideA ? track.sideB : track.sideA);
+                    var nextTrack = this.grid[currentDirection](this.currentTile).value;
+                    if (currentDirection == trainGame.Direction.opposite(nextTrack.sideA)
+                        || currentDirection == trainGame.Direction.opposite(nextTrack.sideB)) {
+                        return this.grid[currentDirection](this.currentTile);
+                    }
+                    else {
+                        return null;
+                    }
+                }
+            }
+
             this.establishCurrentTile = function () {
                 var x = y = 0;
                 var track = null;
@@ -76,40 +101,16 @@
                     ++y;
                 }
 
+                this.nextTile();
                 $this.setPosition(track.parent.x + track.x, track.parent.y + track.y);
                 $this.rotation = trainGame.Direction.rotation(currentDirection);
 
-            }();
-
-            this.nextTile = function() {
-                
-                var track = this.currentTrack();
-
-                if(track.trackType == "Start") {
-                    currentDirection = track.sideA;
-                    return this.grid[currentDirection](this.currentTile);
-                }
-                else if (track.trackType == "End") {
-                    currentDirection = trainGame.Direction.opposite(track.sideA);
-                    return null;
-                } 
-                else {
-                    var nextTrack = this.grid[currentDirection](this.currentTile).value;
-                    if(currentDirection == trainGame.Direction.opposite(nextTrack.sideA) 
-                        || currentDirection == trainGame.Direction.opposite(nextTrack.sideB)) {
-                        return this.grid[currentDirection](this.currentTile);
-                    }
-                    else {
-                        return null;
-                    }
-                }
-            }
+            };
 
             this.start = function () {
                 this.Animation.gotoAndPlay("start");
             }
 
-            var test = { x: 0, y: 0 };
             this.launch = function () {
                 this.Animation.gotoAndPlay("startLaunch");
 
@@ -118,8 +119,6 @@
                     var track = $this.currentTrack();
                     var pos = trainGame.Direction.sides(track.sideA);
                     $this.setPosition(track.parent.x + pos.x, track.parent.y + pos.y);
-
-                    test = { x: this.x, y: this.y };
                     $this.readyForNext = true;
                 });
             }
@@ -130,42 +129,55 @@
 
             this.arrive = function () {
                 this.Animation.gotoAndPlay("endArrive");
+
+                var track = $this.currentTrack();
+                var pos = trainGame.Direction.sides(track.sideA);
+                $this.setPosition(track.parent.x + 30, track.parent.y + 30);
             }
 
             this.stop = function () {
                 this.Animation.gotoAndPlay("still");
             }
             
-            this.stroke = new createjs.Shape();
-
-            this.addChild(this.stroke);
 
             this.run = function () {
                 this.Animation.gotoAndPlay("running");
 
                 var track = $this.currentTrack();
                 var otherSide = (trainGame.Direction.opposite(currentDirection) == track.sideA ? track.sideB : track.sideA);
-                test
+
                 var startPos = {
                     x: track.parent.x + 30,
                     y: track.parent.y + 30
                 };
 
                 var nextRelative = trainGame.Direction.sides(otherSide);
-                nextRelative = {x: nextRelative.x - 30, y: nextRelative.y - 30 };
+                var nextRelativePoint = { x: nextRelative.x - 30, y: nextRelative.y - 30 };
 
-                this.stroke.graphics.s("#000000").mt(test.x, test.y)
-                    .bt(test.x, test.y, nextRelative.x + startPos.x, nextRelative.y + startPos.y, track.parent.x - 30, track.parent.y + 30).es();
-                test = { x: nextRelative.x + test.x, y: nextRelative.y + test.y };
+                var updateRotation = 0;
 
-                debugger;
-                //this._Tween().to({
-                //    guide: {
-                //        path: [0, 0, 0, 30, 30, 30, 30, 0, 0, 0]
-                //    }
-                //}, 1000).call(function (e) {
-                //    $this.readyForNext = true;
-                //});
+                if (track.trackType == "Corner") {
+                    if (otherSide == trainGame.Direction.onLeft(currentDirection)) {
+                        updateRotation = -90;
+                    }
+                    else {
+                        updateRotation = 90;
+                    }
+                }
+
+                if (track.trackType != "End") {
+                    this._Tween().to({
+                        rotation: this.rotation + updateRotation,
+                        guide: {
+                            path: [this.x, this.y, this.x, this.y, startPos.x + nextRelativePoint.x, startPos.y + nextRelativePoint.y]
+                        }
+                    }, 1000).call(function (e) {
+                        $this.readyForNext = true;
+                    });
+                }
+                else {
+                    $this.readyForNext = true;
+                }
 
             }
 
@@ -173,9 +185,6 @@
                 this.Animation.gotoAndPlay("crash");
             }
 
-            //
-
-            
             this.currentTrack = function () {
                 return this.currentTile.value;
             };
@@ -205,6 +214,8 @@
                     }
                 }
             });
+
+            this.establishCurrentTile();
         }
 
         scope.trainGame = trainGame;

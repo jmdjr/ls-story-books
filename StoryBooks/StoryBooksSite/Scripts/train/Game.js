@@ -19,10 +19,14 @@ define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton', 'train/train', 'tr
             var gridManager = new jdge.GridManager(this.Engine);
 
             gridManager.addGrid("Second Grid", [
-                [10, 13, 13, 13, 11],
-                [14, 10, 13, 13, 12],
-                [14, 14, 10, 11,  6],
-                [ 4,  9, 12,  9, 12]
+                [10, 13, 11,  0,  0,  0],
+                [14,  0, 14,  0,  0,  0],
+                [14,  1, 12, 10,  7,  0],
+                [14, 10, 11, 14, 10, 11],
+                [ 9, 12, 14,  9, 12, 14],
+                [ 0,  0, 14,  0,  0, 14],
+                [0, 0, 9, 13, 13, 12]
+
             ], function (id) { return new trainGame.Track(id); });
 
             gridManager.selectGrid("Second Grid");
@@ -37,17 +41,11 @@ define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton', 'train/train', 'tr
                 this.testingTrain.start();
                 gridManager.Draw();
             }
-
-            var shape = new createjs.Shape();
-            shape.graphics.moveTo(240,30).s("#000000").curveTo(270, 30,270,60).es();
-            
-            this.addChild(shape);
             this.update = function () {
-                gridManager.setChildIndex(this.testingTrain, gridManager.children.length - 1);
             }
 
-            this.scaleX = 2;
-            this.scaleY = 2;
+            this.scaleX = 1;
+            this.scaleY = 1;
         });
     });
 });

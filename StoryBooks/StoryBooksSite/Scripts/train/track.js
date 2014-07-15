@@ -25,6 +25,17 @@
                 }
             },
 
+            //returns the direction on its left
+            onLeft: function (dir) {
+                switch (dir) {
+                    case tg.Direction.none: return tg.Direction.none;
+                    case tg.Direction.north: return tg.Direction.west;
+                    case tg.Direction.east: return tg.Direction.north;
+                    case tg.Direction.south: return tg.Direction.east;
+                    case tg.Direction.west: return tg.Direction.south;
+                }
+            },
+
             sides: function (dir) {
                 switch (dir) {
                     case tg.Direction.none: return { x: -1, y: -1 };
@@ -159,6 +170,9 @@
                     establishTrack.call($this, "Straight", tg.Direction.north, tg.Direction.south, true);
                     break;
             }
+            var shape = new createjs.Shape();
+            shape.graphics.s("#00FF00").dc(0, 0, 15).es();
+            this.addChild(shape);
         };
 
         scope.trainGame = tg;
