@@ -133,16 +133,26 @@
             this.stop = function () {
                 this.Animation.gotoAndPlay("still");
             }
+            
+            this.stroke = new createjs.Shape();
+
+            this.addChild(this.stroke);
 
             this.run = function () {
                 this.Animation.gotoAndPlay("running");
 
                 var track = $this.currentTrack();
                 var otherSide = (trainGame.Direction.opposite(currentDirection) == track.sideA ? track.sideB : track.sideA);
+
                 var startPos = {
                     x: track.parent.x,
                     y: track.parent.y
                 };
+
+                var nextRelative = trainGame.Direction.sides(otherSide);
+                nextRelative = {x: nextRelative.x - 30 + startPos.x, y: nextRelative.y - 30 + startPos.y };
+
+                this.stroke.graphics.s("#000000").mt(0, 0).bt(startPos.x, startPos.y, nextRelative.x, nextRelative.y, track.parent.x + 30, track.parent.y + 30).es();
 
                 //this._Tween().to({
                 //    guide: {
@@ -151,6 +161,7 @@
                 //}, 1000).call(function (e) {
                 //    $this.readyForNext = true;
                 //});
+
             }
 
             this.crash = function () {
