@@ -116,7 +116,7 @@ if (define) {
                             while (w <= grid.width) {
                                 var tile = rendering(grid.getTileAt(w, h));
                                 this.RenderedTiles.push(tile);
-                                this.addChild(tile);
+                                this.addChildAt(tile, 0);
                                 ++w;
                             }
                             w = 0;
