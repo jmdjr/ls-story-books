@@ -109,6 +109,7 @@
                 this.Animation.gotoAndPlay("start");
             }
 
+            var test = { x: 0, y: 0 };
             this.launch = function () {
                 this.Animation.gotoAndPlay("startLaunch");
 
@@ -118,6 +119,7 @@
                     var pos = trainGame.Direction.sides(track.sideA);
                     $this.setPosition(track.parent.x + pos.x, track.parent.y + pos.y);
 
+                    test = { x: this.x, y: this.y };
                     $this.readyForNext = true;
                 });
             }
@@ -143,17 +145,20 @@
 
                 var track = $this.currentTrack();
                 var otherSide = (trainGame.Direction.opposite(currentDirection) == track.sideA ? track.sideB : track.sideA);
-
+                test
                 var startPos = {
-                    x: track.parent.x,
-                    y: track.parent.y
+                    x: track.parent.x + 30,
+                    y: track.parent.y + 30
                 };
 
                 var nextRelative = trainGame.Direction.sides(otherSide);
-                nextRelative = {x: nextRelative.x - 30 + startPos.x, y: nextRelative.y - 30 + startPos.y };
+                nextRelative = {x: nextRelative.x - 30, y: nextRelative.y - 30 };
 
-                this.stroke.graphics.s("#000000").mt(0, 0).bt(startPos.x, startPos.y, nextRelative.x, nextRelative.y, track.parent.x + 30, track.parent.y + 30).es();
+                this.stroke.graphics.s("#000000").mt(test.x, test.y)
+                    .bt(test.x, test.y, nextRelative.x + startPos.x, nextRelative.y + startPos.y, track.parent.x - 30, track.parent.y + 30).es();
+                test = { x: nextRelative.x + test.x, y: nextRelative.y + test.y };
 
+                debugger;
                 //this._Tween().to({
                 //    guide: {
                 //        path: [0, 0, 0, 30, 30, 30, 30, 0, 0, 0]
