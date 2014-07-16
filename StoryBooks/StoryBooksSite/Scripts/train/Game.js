@@ -31,7 +31,7 @@ define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton', 'train/train', 'tr
             gridManager.addGrid("Second Grid", [
                 [10, 13, 11, 0, 0, 0],
                 [14, 0, 14, 0, 0, 0],
-                [14, 1, 12, 10, 7, 0],
+                [14, 1, 12, 10, 0, 0],
                 [14, 10, 11, 14, 10, 11],
                 [9, 12, 14, 9, 12, 14],
                 [0, 0, 14, 0, 0, 14],
