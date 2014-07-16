@@ -25,19 +25,18 @@
         trainGame.TrainEngine.prototype.inherited_init = p.initialize;
 
         p.initialize = function (gridManager) {
+            var tgDir = trainGame.Direction;
             if (this.inherited_init) this.inherited_init();
 
             var $this = this;
 
-            this.grid = gridManager.currentGrid();
+            this.grid = null;
            
             var spriteSheet = new createjs.SpriteSheet(animationSheet);
             this.Animation = new createjs.Sprite(spriteSheet, "start");
 
              //adds transition functionality.
             jdge.MakeTransitionable.call(this);
-
-            this.Property = jdge.Property;
 
             this.addChild(this.Animation);
             this.setTransform(30, 30);
@@ -64,15 +63,16 @@
                     return this.grid[currentDirection](this.currentTile);
                 }
                 else if (track.trackType == "End") {
-                    currentDirection = trainGame.Direction.opposite(track.sideA);
+                    currentDirection = tgDir.opposite(track.sideA);
                     return null;
                 }
                 else {
-                    currentDirection = (trainGame.Direction.opposite(currentDirection) == track.sideA ? track.sideB : track.sideA);
-                    var nextTrack = this.grid[currentDirection](this.currentTile).value;
-                    if (currentDirection == trainGame.Direction.opposite(nextTrack.sideA)
-                        || currentDirection == trainGame.Direction.opposite(nextTrack.sideB)) {
-                        return this.grid[currentDirection](this.currentTile);
+                    var next = this.grid[currentDirection](this.currentTile);
+
+                    if (next.value
+                        && (currentDirection == tgDir.opposite(next.value.sideA)
+                        || currentDirection == tgDir.opposite(next.value.sideB))) {
+                        return next;
                     }
                     else {
                         return null;
@@ -81,8 +81,14 @@
             }
 
             this.establishCurrentTile = function () {
+                this.grid = gridManager.currentGrid();
                 var x = y = 0;
                 var track = null;
+                $this.currentTile = null;
+                this.hasStarted = false;
+                this.readyForNext = false;
+                createjs.Tween.removeTweens(this);
+                this.start();
 
                 while (y < $this.grid.height && $this.currentTile == null) {
 
@@ -91,7 +97,7 @@
                         track = tile.value;
 
                         if (!jdge.IsUndefined(track) && track.trackType == "Start") {
-                            $this.currentTile = tile;
+                            this.currentTile = tile;
                             currentDirection = track.sideA;
                         }
 
@@ -101,10 +107,8 @@
                     ++y;
                 }
 
-                this.nextTile();
                 $this.setPosition(track.parent.x + track.x, track.parent.y + track.y);
-                $this.rotation = trainGame.Direction.rotation(currentDirection);
-
+                $this.rotation = tgDir.rotation(currentDirection);
             };
 
             this.start = function () {
@@ -116,10 +120,6 @@
 
                 this._Tween().wait(1000).call(function (e) {
                     $this.run();
-                    var track = $this.currentTrack();
-                    var pos = trainGame.Direction.sides(track.sideA);
-                    $this.setPosition(track.parent.x + pos.x, track.parent.y + pos.y);
-                    $this.readyForNext = true;
                 });
             }
 
@@ -129,43 +129,45 @@
 
             this.arrive = function () {
                 this.Animation.gotoAndPlay("endArrive");
-
                 var track = $this.currentTrack();
-                var pos = trainGame.Direction.sides(track.sideA);
+                var pos = tgDir.sides(track.sideA);
                 $this.setPosition(track.parent.x + 30, track.parent.y + 30);
             }
 
             this.stop = function () {
                 this.Animation.gotoAndPlay("still");
             }
-            
 
             this.run = function () {
                 this.Animation.gotoAndPlay("running");
 
                 var track = $this.currentTrack();
-                var otherSide = (trainGame.Direction.opposite(currentDirection) == track.sideA ? track.sideB : track.sideA);
+                var otherSide = (tgDir.opposite(currentDirection) == track.sideA ? track.sideB : track.sideA);
 
                 var startPos = {
                     x: track.parent.x + 30,
                     y: track.parent.y + 30
                 };
 
-                var nextRelative = trainGame.Direction.sides(otherSide);
+                var nextRelative = tgDir.sides(otherSide);
                 var nextRelativePoint = { x: nextRelative.x - 30, y: nextRelative.y - 30 };
 
                 var updateRotation = 0;
 
                 if (track.trackType == "Corner") {
-                    if (otherSide == trainGame.Direction.onLeft(currentDirection)) {
+
+                    if (otherSide == tgDir.onLeft(currentDirection)) {
                         updateRotation = -90;
                     }
                     else {
                         updateRotation = 90;
                     }
+
+                    currentDirection = otherSide;
                 }
 
                 if (track.trackType != "End") {
+
                     this._Tween().to({
                         rotation: this.rotation + updateRotation,
                         guide: {
@@ -178,7 +180,6 @@
                 else {
                     $this.readyForNext = true;
                 }
-
             }
 
             this.crash = function () {
@@ -208,14 +209,16 @@
                     else if (next == null && $this.currentTrack().trackType == "End") {
                         $this.arrive();
                     }
-                    else if(next != null) {
+                    else if (next != null) {
                         $this.currentTile = next;
                         $this.run();
                     }
                 }
             });
 
-            this.establishCurrentTile();
+            this.recalcTrain = function () {
+                this.establishCurrentTile();
+            }
         }
 
         scope.trainGame = trainGame;

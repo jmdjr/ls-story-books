@@ -28,7 +28,7 @@
             //returns the direction on its left
             onLeft: function (dir) {
                 switch (dir) {
-                    case tg.Direction.none: return tg.Direction.none;
+                    case tg.Direction.none: debugger; return tg.Direction.none;
                     case tg.Direction.north: return tg.Direction.west;
                     case tg.Direction.east: return tg.Direction.north;
                     case tg.Direction.south: return tg.Direction.east;
@@ -170,9 +170,12 @@
                     establishTrack.call($this, "Straight", tg.Direction.north, tg.Direction.south, true);
                     break;
             }
-            var shape = new createjs.Shape();
-            shape.graphics.s("#00FF00").dc(0, 0, 15).es();
-            this.addChild(shape);
+
+            if (jdge._JD_DEBUG_) {
+                var shape = new createjs.Shape();
+                shape.graphics.s("#00FF00").dc(0, 0, 15).es();
+                this.addChild(shape);
+            }
         };
 
         scope.trainGame = tg;
