@@ -34,26 +34,6 @@
                     case tg.Direction.south: return tg.Direction.east;
                     case tg.Direction.west: return tg.Direction.south;
                 }
-            },
-
-            sides: function (dir) {
-                switch (dir) {
-                    case tg.Direction.none: return { x: -1, y: -1 };
-                    case tg.Direction.north: return { x: 30, y: 0 };
-                    case tg.Direction.south: return { x: 30, y: 60 };
-                    case tg.Direction.east: return { x: 60, y: 30 };
-                    case tg.Direction.west: return { x: 0, y: 30 };
-                }
-            },
-
-            rotation: function (dir) {
-                switch (dir) {
-                    case tg.Direction.none: return 0;
-                    case tg.Direction.north: return -90;
-                    case tg.Direction.south: return 90;
-                    case tg.Direction.east: return 0;
-                    case tg.Direction.west: return 180;
-                }
             }
         };
 
@@ -77,104 +57,180 @@
         var p = tg.Track.prototype = new createjs.Container();
         tg.Track.prototype.inherited_init = p.initialize;
 
+
+        p.trackId = 0;
+        p.sideA = null;
+        p.sideB = null;
+        p.trackType = "";
+        p.isMoveable = false;
+        p.isLockable = false;
+        p.Animation = null;
+
+        p.Center = function () {
+            return { x: this.parent.x + 30, y: this.parent.y + 30 };
+        }
+
+        p.lock = function () {
+            if (this.isLockable) {
+                this.isMoveable = false;
+            }
+            this.drawDebug();
+        }
+
+
+        p.drawDebug = function () {
+
+            if (this.isMoveable) {
+                this.shape.graphics.s("#00FF00");
+            }
+            else {
+                this.shape.graphics.s("#FF0000");
+            }
+
+            this.shape.graphics.dc(0, 0, 15).es();
+        }
+        p.unlock = function () {
+            if (this.isLockable) {
+                this.isMoveable = true;
+            }
+            this.drawDebug();
+        }
+
+        p.otherSide = function (side) {
+            return side == this.sideA ? this.sideB : this.sideA;
+        }
+
+        p.turnRot = function (direction) {
+            var turningSide = this.otherSide(tg.Direction.opposite(direction));
+            if (turningSide == tg.Direction.onLeft(direction)) {
+                return -90;
+            }
+            else if (direction != turningSide) {
+                return 90;
+            }
+
+            return 0;
+        }
+
+        p.sides = function (dir) {
+            switch (dir) {
+                case tg.Direction.none: return { x: -1, y: -1 };
+                case tg.Direction.north: return { x: 0, y: -30 };
+                case tg.Direction.south: return { x: 0, y: 30 };
+                case tg.Direction.east: return { x: 30, y: 0 };
+                case tg.Direction.west: return { x: -30, y: 0 };
+            }
+        }
+
+        p.dirRot = function (dir) {
+            switch (dir) {
+                case tg.Direction.none: return 0;
+                case tg.Direction.north: return -90;
+                case tg.Direction.south: return 90;
+                case tg.Direction.east: return 0;
+                case tg.Direction.west: return 180;
+            }
+        }
+
+        p._establishTrack = function (animName, sideA, sideB, isMoveable) {
+            var spriteSheet = new createjs.SpriteSheet(animationSheet);
+            this.Animation = new createjs.Sprite(spriteSheet, animName);
+            this.trackType = animName;
+
+            this.isLockable = animName != "End" && animName != "Start";
+
+            this.Animation.rotation = this.dirRot(sideA);
+            this.sideA = sideA;
+            this.sideB = sideB;
+            this.isMoveable = isMoveable;
+
+            this.addChild(this.Animation);
+        };
+
         p.initialize = function (trackId) {
             if (this.inherited_init) this.inherited_init();
 
-            var $this = this;
-
             this.setTransform(30, 30);
 
-            var spriteSheet = new createjs.SpriteSheet(animationSheet);
-            this.Animation = null;
 
-            this.trackId = trackId || 0;
-
-            // directions for reference...
-            this.sideA = null;
-            this.sideB = null;
-
-            this.trackType = "";
-
-            this.isMoveable = false;
-
-            var establishTrack = function (animName, sideA, sideB, isMoveable) {
-                this.Animation = new createjs.Sprite(spriteSheet, animName);
-                this.trackType = animName;
-                this.Animation.rotation = tg.Direction.rotation(sideA);
-                this.sideA = sideA;
-                this.sideB = sideB;
-                this.isMoveable = isMoveable;
-
-                this.addChild(this.Animation);
-            };
+            this.trackId = trackId;
 
             switch (this.trackId) {
                 default:
                 case 0: // Default blank track
-                    establishTrack.call($this, "Empty", tg.Direction.none, tg.Direction.none, false);
+                    this._establishTrack("Empty", tg.Direction.none, tg.Direction.none, false);
                     break;
 
                 case 1: // Starting going East
-                    establishTrack.call($this, "Start", tg.Direction.east, tg.Direction.none, false);
+                    this._establishTrack("Start", tg.Direction.east, tg.Direction.none, false);
                     break;
 
                 case 2: // Starting going South
-                    establishTrack.call($this, "Start", tg.Direction.south, tg.Direction.none, false);
+                    this._establishTrack("Start", tg.Direction.south, tg.Direction.none, false);
                     break;
 
                 case 3: // Starting going West 
-                    establishTrack.call($this, "Start", tg.Direction.west, tg.Direction.none, false);
+                    this._establishTrack("Start", tg.Direction.west, tg.Direction.none, false);
                     break;
 
                 case 4: // Starting going North 
-                    establishTrack.call($this, "Start", tg.Direction.north, tg.Direction.none, false);
+                    this._establishTrack("Start", tg.Direction.north, tg.Direction.none, false);
                     break;
 
                 case 5: // Ending from East
-                    establishTrack.call($this, "End", tg.Direction.east, tg.Direction.none, false);
+                    this._establishTrack("End", tg.Direction.east, tg.Direction.none, false);
                     break;
 
                 case 6: // Ending from South
-                    establishTrack.call($this, "End", tg.Direction.south, tg.Direction.none, false);
+                    this._establishTrack("End", tg.Direction.south, tg.Direction.none, false);
                     break;
 
                 case 7: // Ending from West 
-                    establishTrack.call($this, "End", tg.Direction.west, tg.Direction.none, false);
+                    this._establishTrack("End", tg.Direction.west, tg.Direction.none, false);
                     break;
 
                 case 8: // Ending from North 
-                    establishTrack.call($this, "End", tg.Direction.north, tg.Direction.none, false);
+                    this._establishTrack("End", tg.Direction.north, tg.Direction.none, false);
                     break;
 
                 case 9: // Corner north east
-                    establishTrack.call($this, "Corner", tg.Direction.east, tg.Direction.north, true);
+                    this._establishTrack("Corner", tg.Direction.east, tg.Direction.north, true);
                     break;
 
                 case 10: // Corner south east
-                    establishTrack.call($this, "Corner", tg.Direction.south, tg.Direction.east, true);
+                    this._establishTrack("Corner", tg.Direction.south, tg.Direction.east, true);
                     break;
 
                 case 11: // Corner south west
-                    establishTrack.call($this, "Corner", tg.Direction.west, tg.Direction.south, true);
+                    this._establishTrack( "Corner", tg.Direction.west, tg.Direction.south, true);
                     break;
 
                 case 12: // Corner north west
-                    establishTrack.call($this, "Corner", tg.Direction.north, tg.Direction.west, true);
+                    this._establishTrack("Corner", tg.Direction.north, tg.Direction.west, true);
                     break;
 
                 case 13: // straight from east to west
-                    establishTrack.call($this, "Straight", tg.Direction.east, tg.Direction.west, true);
+                    this._establishTrack( "Straight", tg.Direction.east, tg.Direction.west, true);
                     break;
 
                 case 14: // straight from north to south
-                    establishTrack.call($this, "Straight", tg.Direction.north, tg.Direction.south, true);
+                    this._establishTrack("Straight", tg.Direction.north, tg.Direction.south, true);
                     break;
             }
 
-            if (jdge._JD_DEBUG_) {
-                var shape = new createjs.Shape();
-                shape.graphics.s("#00FF00").dc(0, 0, 15).es();
-                this.addChild(shape);
+
+
+            this.shape = new createjs.Shape();
+            if (jdge._JD_DEBUG_ || true) {
+                if (this.isMoveable) {
+                    this.shape.graphics.s("#00FF00");
+                }
+                else {
+                    this.shape.graphics.s("#FF0000");
+                }
+
+                this.shape.graphics.dc(0, 0, 15).es();
+                this.addChild(this.shape);
             }
         };
 

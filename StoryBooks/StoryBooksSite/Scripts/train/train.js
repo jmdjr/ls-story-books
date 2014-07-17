@@ -108,7 +108,7 @@
                 }
 
                 $this.setPosition(track.parent.x + track.x, track.parent.y + track.y);
-                $this.rotation = tgDir.rotation(currentDirection);
+                $this.rotation = track.dirRot(currentDirection);
             };
 
             this.start = function () {
@@ -142,43 +142,30 @@
                 this.Animation.gotoAndPlay("running");
 
                 var track = $this.currentTrack();
-                var otherSide = (tgDir.opposite(currentDirection) == track.sideA ? track.sideB : track.sideA);
 
-                var startPos = {
-                    x: track.parent.x + 30,
-                    y: track.parent.y + 30
-                };
-
-                var nextRelative = tgDir.sides(otherSide);
-                var nextRelativePoint = { x: nextRelative.x - 30, y: nextRelative.y - 30 };
-
-                var updateRotation = 0;
-
-                if (track.trackType == "Corner") {
-
-                    if (otherSide == tgDir.onLeft(currentDirection)) {
-                        updateRotation = -90;
-                    }
-                    else {
-                        updateRotation = 90;
-                    }
-
-                    currentDirection = otherSide;
-                }
-
+                track.lock();
+                var trackSide = tgDir.opposite(currentDirection);
+                var otherSide = track.otherSide(trackSide);
+                var startPos = track.Center();
+                var nextRelative = track.sides(otherSide);
+                
                 if (track.trackType != "End") {
 
                     this._Tween().to({
-                        rotation: this.rotation + updateRotation,
+                        rotation: this.rotation + track.turnRot(currentDirection),
                         guide: {
-                            path: [this.x, this.y, this.x, this.y, startPos.x + nextRelativePoint.x, startPos.y + nextRelativePoint.y]
+                            path: [this.x, this.y, startPos.x, startPos.y, startPos.x + nextRelative.x, startPos.y + nextRelative.y]
                         }
                     }, 1000).call(function (e) {
+
+                        currentDirection = otherSide;
                         $this.readyForNext = true;
+                        track.unlock();
                     });
                 }
                 else {
                     $this.readyForNext = true;
+                    track.unlock();
                 }
             }
 
