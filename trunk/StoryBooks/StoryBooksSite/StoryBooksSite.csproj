@@ -78,7 +78,6 @@
     <Content Include="Scripts\require\LSButton.js" />
     <Content Include="Scripts\require\PieMenu.js" />
     <Content Include="Scripts\train\Game.js" />
-    <Content Include="Scripts\train\TrackTile.js" />
     <Content Include="Scripts\train\track.js" />
     <Content Include="Scripts\train\train.js" />
     <Content Include="Web.config" />

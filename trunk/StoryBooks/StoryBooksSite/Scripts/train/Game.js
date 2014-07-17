@@ -48,7 +48,7 @@ define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton', 'train/train', 'tr
             }
 
             this.enter = function () {
-                this.shiftGridManager("First Grid");
+                this.shiftGridManager("Second Grid");
             }
             this.update = function () {
                 gridManager.Draw();
