@@ -186,6 +186,16 @@ if (define) {
                     }
                     return 'NDF';
                 };
+
+                this.removeValue = function() {
+                    var o = this.value;
+                    this.value = null;
+                    return o;
+                }
+
+                this.addValue = function (value) {
+                    this.value = value;
+                }
             }
 
             jdge._NULL_TILE_ = new jdge.SimpleGridTileObject(null, -1, -1);
