@@ -1,6 +1,6 @@
 ﻿var Game = null;
 
-define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton', 'train/train', 'train/track'], function ($) {
+define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton', 'train/train', 'train/track', 'train/trackmover'], function ($) {
     $(function () {
 
         Game = new jdge.Engine(600, 800);
@@ -18,7 +18,9 @@ define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton', 'train/train', 'tr
         MenusFC.add('GameScreen', function () {
             var gridManager = new jdge.GridManager(this.Engine);
             var testingTrain = new trainGame.TrainEngine(gridManager);
-            var tiler = function (id) { return new trainGame.Track(id); };
+
+            var trackMover = new trainGame.TrackMover();
+            var tiler = function (id) { return new trainGame.Track(id, trackMover); };
 
             gridManager.addGrid("First Grid", [
                 [10, 13, 13, 13, 11],
@@ -31,7 +33,7 @@ define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton', 'train/train', 'tr
             gridManager.addGrid("Second Grid", [
                 [10, 13, 11, 0, 0, 0],
                 [14, 0, 14, 0, 0, 0],
-                [14, 1, 12, 10, 0, 0],
+                [14, 1, 12, 10, 7, 0],
                 [14, 10, 11, 14, 10, 11],
                 [9, 12, 14, 9, 12, 14],
                 [0, 0, 14, 0, 0, 14],
@@ -41,6 +43,7 @@ define(['jquery', 'JDGEngine', 'JDGEGridManager', 'LSButton', 'train/train', 'tr
 
             this.addChild(gridManager);
             gridManager.addChild(testingTrain);
+            gridManager.addChild(trackMover);
 
             this.shiftGridManager = function (newGrid) {
                 gridManager.selectGrid(newGrid);

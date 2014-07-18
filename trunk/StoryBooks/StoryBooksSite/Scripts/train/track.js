@@ -50,13 +50,12 @@
             }
         };
 
-        tg.Track = function (trackId) {
-            this.initialize(trackId);
+        tg.Track = function (trackId, trackmover) {
+            this.initialize(trackId, trackmover);
         };
 
         var p = tg.Track.prototype = new createjs.Container();
         tg.Track.prototype.inherited_init = p.initialize;
-
 
         p.trackId = 0;
         p.sideA = null;
@@ -74,9 +73,9 @@
             if (this.isLockable) {
                 this.isMoveable = false;
             }
-            this.drawDebug();
-        }
 
+            //this.drawDebug();
+        }
 
         p.drawDebug = function () {
 
@@ -89,11 +88,13 @@
 
             this.shape.graphics.dc(0, 0, 15).es();
         }
+
         p.unlock = function () {
             if (this.isLockable) {
                 this.isMoveable = true;
             }
-            this.drawDebug();
+
+            //this.drawDebug();
         }
 
         p.otherSide = function (side) {
@@ -147,11 +148,12 @@
             this.addChild(this.Animation);
         };
 
-        p.initialize = function (trackId) {
+        p.initialize = function (trackId, trackmover) {
             if (this.inherited_init) this.inherited_init();
 
             this.setTransform(30, 30);
-
+             
+            this.mover = trackmover;
 
             this.trackId = trackId;
 
@@ -218,6 +220,21 @@
                     break;
             }
 
+            this.on('mouseover', function (e) {
+                
+            });
+
+            this.on('click', function (e) {
+                if (e.target instanceof tg.Track) {
+                    var track = e.target;
+
+                    if (trackmover.hasTrack() && track.isMoveable) {
+
+                    }
+
+                }
+                debugger;
+            });
 
 
             this.shape = new createjs.Shape();

@@ -130,7 +130,7 @@
             this.arrive = function () {
                 this.Animation.gotoAndPlay("endArrive");
                 var track = $this.currentTrack();
-                var pos = tgDir.sides(track.sideA);
+                var pos = track.sides(track.sideA);
                 $this.setPosition(track.parent.x + 30, track.parent.y + 30);
             }
 

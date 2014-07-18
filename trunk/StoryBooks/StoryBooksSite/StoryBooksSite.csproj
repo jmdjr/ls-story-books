@@ -79,6 +79,7 @@
     <Content Include="Scripts\require\PieMenu.js" />
     <Content Include="Scripts\train\Game.js" />
     <Content Include="Scripts\train\track.js" />
+    <Content Include="Scripts\train\trackmover.js" />
     <Content Include="Scripts\train\train.js" />
     <Content Include="Web.config" />
     <Content Include="Pages\Test.php" />
