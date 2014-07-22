@@ -9,16 +9,18 @@
         var p = TrackMover.prototype = new createjs.Container();
         TrackMover.prototype.inherited_init = p.initialize;
 
-        p.floatingTrack = new tg.Track(0);
+        p.floatingTrack = new tg.Track(0, null);
 
         p.SwapTracks = function (track) {
             if (track.isMoveable) {
 
             }
         }
-        p.hasTrack = function () {
 
+        p.hasTrack = function () {
+            return this.floatingTrack != null && !(this.floatingTrack.TrackId != 0);
         }
+
         p.initialize = function () {
             if (this.inherited_init) this.inherited_init();
 

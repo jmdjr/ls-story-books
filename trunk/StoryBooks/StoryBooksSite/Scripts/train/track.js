@@ -225,15 +225,16 @@
             });
 
             this.on('click', function (e) {
-                if (e.target instanceof tg.Track) {
-                    var track = e.target;
+                if (trackmover != null) {
+                    if (e.target instanceof tg.Track) {
+                        var track = e.target;
 
-                    if (trackmover.hasTrack() && track.isMoveable) {
+                        if (trackmover.hasTrack() && track.isMoveable) {
+
+                        }
 
                     }
-
                 }
-                debugger;
             });
 
 
