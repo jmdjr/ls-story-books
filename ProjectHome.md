@@ -1,0 +1,1 @@
+A Unity 4.x project utilizing simple options and mini-games to enable users to play through many stories, which will be made and continuously added to expand the game's library.
