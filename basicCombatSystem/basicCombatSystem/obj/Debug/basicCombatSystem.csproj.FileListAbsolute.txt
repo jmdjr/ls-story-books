@@ -1,2 +1,0 @@
-E:\DevelopmentProjects\basicCombatSystem\basicCombatSystem\bin\Debug\basicCombatSystem.exe.config
-C:\GitHub\ls-story-books\basicCombatSystem\basicCombatSystem\bin\Debug\basicCombatSystem.exe.config
