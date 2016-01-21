@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fight Game.CSharp.Plugins", "Fight Game.CSharp.Plugins.csproj", "{0DBB9763-9B93-A2DC-7581-8FD30FDF2EC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fight Game.CSharp", "Fight Game.CSharp.csproj", "{1CA77892-7439-5309-2FB7-BE95CD0B2256}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fight Game.CSharp.Editor", "Fight Game.CSharp.Editor.csproj", "{8E2B1B61-4DE8-6CAE-8983-B23CD2882754}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0DBB9763-9B93-A2DC-7581-8FD30FDF2EC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0DBB9763-9B93-A2DC-7581-8FD30FDF2EC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0DBB9763-9B93-A2DC-7581-8FD30FDF2EC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0DBB9763-9B93-A2DC-7581-8FD30FDF2EC0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1CA77892-7439-5309-2FB7-BE95CD0B2256}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1CA77892-7439-5309-2FB7-BE95CD0B2256}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1CA77892-7439-5309-2FB7-BE95CD0B2256}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1CA77892-7439-5309-2FB7-BE95CD0B2256}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8E2B1B61-4DE8-6CAE-8983-B23CD2882754}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8E2B1B61-4DE8-6CAE-8983-B23CD2882754}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8E2B1B61-4DE8-6CAE-8983-B23CD2882754}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8E2B1B61-4DE8-6CAE-8983-B23CD2882754}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
