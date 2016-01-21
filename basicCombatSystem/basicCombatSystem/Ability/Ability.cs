@@ -9,18 +9,19 @@ namespace basicCombatSystem
     public class Ability
     {
         public string Name { get; set; }
+        public AbilityType Type { get; set; }
         public Effect Effect { get; set; }
         public int AbilityId { get; set; }
+        public FighterInfo FighterInfo { get; set; }
 
-        private Ability() { }
-
-        public Ability Clone(FighterInfo fighterInfo)
+        public Ability(Effect effect, ) 
         {
-            Ability clone = new Ability();
-            Effect effect = new Effect();
+            this.Effect = effect;
+        }
 
-
-            return clone;
+        public Ability Clone(FighterInfo info)
+        {
+            return new Ability(this.Effect) { FighterInfo = info };
         }
     }
 }

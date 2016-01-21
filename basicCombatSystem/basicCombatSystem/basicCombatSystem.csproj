@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>basicCombatSystem</RootNamespace>
     <AssemblyName>basicCombatSystem</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -43,24 +44,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Ability.cs" />
-    <Compile Include="AbilityFactory.cs" />
-    <Compile Include="Effect.cs" />
-    <Compile Include="Fighter.cs" />
-    <Compile Include="FighterInfo.cs" />
-    <Compile Include="FighterTeam.cs" />
-    <Compile Include="Fight.cs" />
+    <Compile Include="Ability\Ability.cs" />
+    <Compile Include="Ability\AbilityFactory.cs" />
+    <Compile Include="Ability\AbilityType.cs" />
+    <Compile Include="Ability\Effect.cs" />
+    <Compile Include="Fighter\Fighter.cs" />
+    <Compile Include="Fight\FighterFightStatus.cs" />
+    <Compile Include="Fighter\FighterInfo.cs" />
+    <Compile Include="Fight\FighterTargetsGroup.cs" />
+    <Compile Include="FighterTeam\FighterTeam.cs" />
+    <Compile Include="Fight\Fight.cs" />
+    <Compile Include="Fight\FighterTeamFightStatus.cs" />
+    <Compile Include="FighterTeam\FighterTeamInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Fight\TargetingStatus.cs" />
+    <Compile Include="FighterTeam\TeamPositionType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="FighterTeam\" />
-    <Folder Include="Fighter\" />
-    <Folder Include="Fight\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

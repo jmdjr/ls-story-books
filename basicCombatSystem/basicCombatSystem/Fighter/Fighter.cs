@@ -17,5 +17,11 @@ namespace basicCombatSystem
             // Generate Abilities from Ability factory using figher info
             
         }
+
+        public Ability ChooseAbility() 
+        {
+            Random ran = new Random();
+            return Abilities[ran.Next(0, Abilities.Count() - 1)];
+        }
     }
 }

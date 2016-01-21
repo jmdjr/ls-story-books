@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace basicCombatSystem
 {
-    public class FighterTeam
+    [Serializable]
+    public class FighterTeamInfo
     {
-        public List<Fighter> Fighters;
+        public string TeamName;
+        public List<FighterInfo> Fighters;
     }
 }
