@@ -2,7 +2,7 @@
 using CombatSystem;
 public class FighterScript : MonoBehaviour {
 
-    public Fighter reference;
+    public FighterFightStatus reference;
 	// Use this for initialization
 
     void Awake()

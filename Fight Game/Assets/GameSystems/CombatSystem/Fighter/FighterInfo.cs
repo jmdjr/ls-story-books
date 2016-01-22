@@ -1,5 +1,7 @@
-﻿using System;
+﻿using UnityEngine;
+using System;
 
+using Random = UnityEngine.Random;
 namespace CombatSystem
 {
     [Serializable]
@@ -15,14 +17,15 @@ namespace CombatSystem
 
         public void Randomize()
         {
-            Random ran = new Random();
             this.Experience = 0;
-            this.Speed = ran.Next(1, 5);
-            this.Attack = ran.Next(1, 10);
-            this.Defence = ran.Next(1, 10);
-            this.Health = ran.Next(50, 100);
+            this.Speed = Random.Range(1, 5);
+            this.Attack = Random.Range(1, 10);
+            this.Defence = Random.Range(1, 10);
+            this.Health = Random.Range(50, 100);
 
             this.Position = TeamPositionType.NONE;
+
+            this.Name = "Fighter_" + Math.Floor(Random.value * 1000);
         }
 
         public FighterInfo()

@@ -8,8 +8,8 @@ namespace CombatSystem
 {
     public class Fight 
     {
-        private FighterTeamFightStatus Alpha;
-        private FighterTeamFightStatus Beta;
+        public FighterTeamFightStatus Alpha;
+        public FighterTeamFightStatus Beta;
 
         private List<FighterFightStatus> FightOrder;
 
@@ -38,20 +38,22 @@ namespace CombatSystem
         {
             // runs the basic steps in combat, through one cycle.
             // get next available fighter, if none, step everyone's counters. 
-
+            FightOrder.ForEach((f) => f.StepIdle());
             FighterFightStatus next = this.getNextFighter();
 
-            if (this.FighterBegin != null)
+            if (next != null)
             {
-                this.FighterBegin(next);
+                if (this.FighterBegin != null)
+                {
+                    this.FighterBegin(next);
+                }
+
+                // choose ability to activate
+                Ability activeAbility = next.fighter.ChooseAbility();
+
+                next.SetIdle();
             }
 
-            // choose ability to activate
-            Ability activeAbility = next.fighter.ChooseAbility();
-            next.SetIdle();
-            next = this.getNextFighter();
-
-            FightOrder.ForEach((f) => f.StepIdle());
         }
     }
 }

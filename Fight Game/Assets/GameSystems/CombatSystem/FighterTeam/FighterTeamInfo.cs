@@ -10,8 +10,6 @@ namespace CombatSystem
         public List<FighterInfo> Fighters;
 
         public void Randomize() {
-            Random ran = new Random();
-
             Fighters = new List<FighterInfo>();
             Fighters.Add(new FighterInfo(true));
             Fighters.Add(new FighterInfo(true));

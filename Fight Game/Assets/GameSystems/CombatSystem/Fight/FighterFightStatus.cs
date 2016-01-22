@@ -1,4 +1,5 @@
-﻿namespace CombatSystem
+﻿using System;
+namespace CombatSystem
 {
     public class FighterFightStatus
     {
@@ -30,6 +31,7 @@
         public void SetIdle()
         {
             // calculate and set idleTime from current Speed.
+            this.idleTime = 100 / this.info.Speed;
         }
     }
 }

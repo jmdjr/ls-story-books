@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
+
+using Random = UnityEngine.Random;
 
 namespace CombatSystem
 {
@@ -19,10 +22,9 @@ namespace CombatSystem
 
         public Ability ChooseAbility() 
         {
-            Random ran = new Random();
             if (Abilities.Count() > 0)
             {
-                return Abilities[ran.Next(0, Abilities.Count() - 1)];
+                return Abilities[Random.Range(0, Abilities.Count() - 1)];
             }
 
             return null;

@@ -23,25 +23,41 @@ public class GameControlScript: MonoBehaviour
 	// Use this for initialization
     void Start()
     {
-        FighterTeamInfo alphaInfo = new FighterTeamInfo(true);
-        FighterTeam AlphaTeam = new FighterTeam(alphaInfo);
-        GameObject alphaTeamObject = Instantiate<GameObject>(TeamPrefab);
-        alphaTeamObject.GetComponent<TeamFightScript>().reference = AlphaTeam;
-
-        FighterTeamInfo betaInfo = new FighterTeamInfo(true);
-        FighterTeam BetaTeam = new FighterTeam(betaInfo);
-        GameObject betaTeamObject = Instantiate<GameObject>(TeamPrefab);
-        betaTeamObject.GetComponent<TeamFightScript>().reference = BetaTeam;
-
-        this.Fight = new Fight(AlphaTeam, BetaTeam);
+        InitializeFight();
+        GenerateTeamsGameObjects();
 
         Debug.Log("Fight Beginning...");
         this.Fight.FighterBegin += updateStatus;
 	}
-    
+    void InitializeFight()
+    {
+        FighterTeamInfo alphaInfo = new FighterTeamInfo(true);
+        FighterTeam AlphaTeam = new FighterTeam(alphaInfo);
+        alphaInfo.TeamName = "Alpha Team";
+
+        FighterTeamInfo betaInfo = new FighterTeamInfo(true);
+        FighterTeam BetaTeam = new FighterTeam(betaInfo);
+        betaInfo.TeamName = "Beta Team";
+
+        this.Fight = new Fight(AlphaTeam, BetaTeam);
+    }
+    void GenerateTeamsGameObjects() 
+    {
+        GameObject alphaTeamObject = Instantiate<GameObject>(TeamPrefab);
+        GameObject betaTeamObject = Instantiate<GameObject>(TeamPrefab);
+
+        alphaTeamObject.GetComponent<TeamFightScript>().reference = this.Fight.Alpha;
+        betaTeamObject.GetComponent<TeamFightScript>().reference = this.Fight.Beta;
+
+        alphaTeamObject.transform.position = new Vector3(-5, 1, 0);
+        betaTeamObject.transform.position = new Vector3(5, 1, 0);
+
+        alphaTeamObject.name = this.Fight.Alpha.TeamInfo.TeamName;
+        betaTeamObject.name = this.Fight.Beta.TeamInfo.TeamName;
+    }
     void updateStatus(FighterFightStatus fighterStatus)
     {
-        Debug.Log("Fighter going...");
+        //Debug.Log("Fighter: " + fighterStatus.idleTime);
     }
 
 	// Update is called once per frame

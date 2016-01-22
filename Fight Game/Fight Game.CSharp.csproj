@@ -88,6 +88,7 @@
     <Compile Include="Assets\GameSystems\CombatSystem\FighterTeam\FighterTeam.cs" />
     <Compile Include="Assets\GameSystems\CombatSystem\FighterTeam\FighterTeamInfo.cs" />
     <Compile Include="Assets\GameSystems\CombatSystem\FighterTeam\TeamPositionType.cs" />
+    <Compile Include="Assets\GameSystems\Utilities\BasicMechanics.cs" />
     <Compile Include="Assets\MonoBehavior Scripts\FighterScript.cs" />
     <Compile Include="Assets\MonoBehavior Scripts\GameControlScript.cs" />
     <Compile Include="Assets\MonoBehavior Scripts\TeamFightScript.cs" />

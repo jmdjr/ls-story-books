@@ -7,13 +7,14 @@ namespace CombatSystem
 {
     public class FighterTeamFightStatus
     {
-        FighterTeam TeamOrganization;
-
-        List<FighterFightStatus> TeamStatus;
+        public FighterTeam TeamOrganization;
+        public FighterTeamInfo TeamInfo;
+        public List<FighterFightStatus> TeamStatus;
 
         public FighterTeamFightStatus(FighterTeam team)
         {
             this.TeamOrganization = team;
+            this.TeamInfo = team.Info;
         }
 
         public List<FighterFightStatus> SetupFightStatus()
@@ -21,7 +22,6 @@ namespace CombatSystem
             this.TeamStatus = this.TeamOrganization.Fighters.ConvertAll<FighterFightStatus>((fighter) => new FighterFightStatus(fighter));
             return this.TeamStatus;
         }
-
 
         public FighterTargetsGroup findTargets(Ability incoming)
         {

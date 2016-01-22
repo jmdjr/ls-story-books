@@ -5,7 +5,7 @@ namespace CombatSystem
     public class FighterTeam
     {
         public List<Fighter> Fighters;
-        private FighterTeamInfo Info;
+        public FighterTeamInfo Info;
 
         public FighterTeam(FighterTeamInfo info)
         {
