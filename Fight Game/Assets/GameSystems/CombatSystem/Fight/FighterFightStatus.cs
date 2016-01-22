@@ -6,12 +6,14 @@ namespace CombatSystem
         // this info should be able to be altered 
         public FighterInfo info;
         public Fighter fighter;
+        public FighterTeamFightStatus Team;
         public int idleTime;
 
-        public FighterFightStatus(Fighter fighter)
+        public FighterFightStatus(Fighter fighter, FighterTeamFightStatus team)
         {
             this.fighter = fighter;
-            this.info = fighter.Info;
+            this.Team = team;
+            this.info = fighter.Info.Clone();
 
             // Calculate idleTime from speed.
             this.SetIdle();
@@ -32,6 +34,11 @@ namespace CombatSystem
         {
             // calculate and set idleTime from current Speed.
             this.idleTime = 100 / this.info.Speed;
+        }
+
+        public bool isAlive()
+        {
+            return this.info.Health > 0;
         }
     }
 }

@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 using CombatSystem;
+
+
 public class GameControlScript: MonoBehaviour
 {
-
     public static GameControlScript control;
     public Fight Fight;
     public GameObject TeamPrefab;
+    private FighterTeamInfo myInfo;
+
+    private bool runFight = true;
 
     void Awake() {
         if (control == null)
@@ -27,11 +31,22 @@ public class GameControlScript: MonoBehaviour
         GenerateTeamsGameObjects();
 
         Debug.Log("Fight Beginning...");
+        Debug.Log(this.Fight.Alpha.DebugInfo() + "\n" + this.Fight.Beta.DebugInfo());
         this.Fight.FighterBegin += updateStatus;
 	}
+
     void InitializeFight()
     {
-        FighterTeamInfo alphaInfo = new FighterTeamInfo(true);
+        FighterTeamInfo alphaInfo = BasicMechanics.Load();
+        Debug.Log("Loading save file: " + BasicMechanics.SaveFile);
+        if (alphaInfo == null)
+        {
+            alphaInfo = new FighterTeamInfo(true);
+            BasicMechanics.Save(alphaInfo);
+            Debug.Log("Creating save file: " + BasicMechanics.SaveFile);
+        }
+
+        myInfo = alphaInfo;
         FighterTeam AlphaTeam = new FighterTeam(alphaInfo);
         alphaInfo.TeamName = "Alpha Team";
 
@@ -39,8 +54,9 @@ public class GameControlScript: MonoBehaviour
         FighterTeam BetaTeam = new FighterTeam(betaInfo);
         betaInfo.TeamName = "Beta Team";
 
-        this.Fight = new Fight(AlphaTeam, BetaTeam);
+        Fight = new Fight(AlphaTeam, BetaTeam);
     }
+
     void GenerateTeamsGameObjects() 
     {
         GameObject alphaTeamObject = Instantiate<GameObject>(TeamPrefab);
@@ -57,7 +73,6 @@ public class GameControlScript: MonoBehaviour
     }
     void updateStatus(FighterFightStatus fighterStatus)
     {
-        //Debug.Log("Fighter: " + fighterStatus.idleTime);
     }
 
 	// Update is called once per frame
@@ -66,12 +81,31 @@ public class GameControlScript: MonoBehaviour
 	}
     void RunFight()
     {
-        if (this.Fight != null)
+        if (this.Fight != null && this.runFight)
         {
-            this.Fight.StepFight();
+            FighterTeamFightStatus winningTeam = this.Fight.GetWinner();
+            if (winningTeam == null)
+            {
+                this.Fight.StepFight();
+                Debug.Log(this.Fight.Alpha.DebugInfo() + "\n" + this.Fight.Beta.DebugInfo());
+
+            }
+            else
+            {
+                Debug.Log(winningTeam.TeamInfo.TeamName + "is the winner!!!");
+                this.runFight = false;
+            }
         }
     }
     void OnGUI() { 
         
+    }
+
+    void OnApplicationQuit()
+    {
+        if(myInfo != null)
+        {
+            BasicMechanics.Save(myInfo);
+        }
     }
 }

@@ -15,9 +15,14 @@ namespace CombatSystem
         public Fighter(FighterInfo info)
         {
             this.Info = info;
-            // Generate Abilities from Ability factory using figher info
 
+            // Generate Abilities from Ability factory using figher info
             Abilities = new List<Ability>();
+
+            foreach(int abilityId in this.Info.Abilities)
+            {
+                this.Abilities.Add(AbilityFactory.Factory.Abilities[abilityId]);
+            }
         }
 
         public Ability ChooseAbility() 

@@ -22,20 +22,11 @@ public class TeamFightScript : MonoBehaviour {
                 vertical -= 2;
             }
         }
-
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (reference != null)
-        {
-            string teamStatus = reference.TeamInfo.TeamName + "\n";
-            reference.TeamStatus.ForEach((fighterStatus) => {
-                teamStatus += fighterStatus.info.Name + ": " + fighterStatus.idleTime + "\n";
-            });
 
-            //Debug.Log(teamStatus);
-        }
 	
 	}
 }

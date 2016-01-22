@@ -39,21 +39,49 @@ namespace CombatSystem
             // runs the basic steps in combat, through one cycle.
             // get next available fighter, if none, step everyone's counters. 
             FightOrder.ForEach((f) => f.StepIdle());
-            FighterFightStatus next = this.getNextFighter();
+            FighterFightStatus activeFighter = this.getNextFighter();
 
-            if (next != null)
+            if (activeFighter != null)
             {
+                FighterTeamFightStatus OtherTeam = activeFighter.Team == this.Alpha ? this.Beta : this.Alpha;
+
                 if (this.FighterBegin != null)
                 {
-                    this.FighterBegin(next);
+                    this.FighterBegin(activeFighter);
                 }
 
                 // choose ability to activate
-                Ability activeAbility = next.fighter.ChooseAbility();
+                Ability activeAbility = activeFighter.fighter.ChooseAbility();
 
-                next.SetIdle();
+                if(activeAbility != null)
+                {
+                    FighterTeamFightStatus targetTeam = activeAbility.TargetTeam == AbilityTeamTarget.OTHER ? OtherTeam : activeFighter.Team;
+                    FighterTargetsGroup targets = targetTeam.findTargets(activeAbility);
+
+                    activeAbility.Effect(targets, activeFighter);
+                }
+
+                activeFighter.SetIdle();
+            }
+        }
+
+        public bool HasWinner()
+        {
+            return GetWinner() != null;
+        }
+
+        public FighterTeamFightStatus GetWinner()
+        {
+            if(!Alpha.anyoneLeftAlive())
+            {
+                return Beta;
+            }
+            else if(!Beta.anyoneLeftAlive())
+            {
+                return Alpha;
             }
 
+            return null;
         }
     }
 }

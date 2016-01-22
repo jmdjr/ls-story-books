@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using CombatSystem;
-public class FighterScript : MonoBehaviour {
+public class FighterScript : MonoBehaviour
+{
 
     public FighterFightStatus reference;
-	// Use this for initialization
+    public FighterInfo FighterInfo;
+    // Use this for initialization
 
     void Awake()
     {
@@ -12,7 +14,11 @@ public class FighterScript : MonoBehaviour {
 
 	void Start ()
     {
-	    
+	    if(reference != null)
+        {
+            FighterInfo = reference.info;
+            this.name = FighterInfo.Name;
+        }
 	}
 	
 	// Update is called once per frame
@@ -20,4 +26,10 @@ public class FighterScript : MonoBehaviour {
     {
 	    
 	}
+
+    void onGUI()
+    {
+
+    }
+
 }

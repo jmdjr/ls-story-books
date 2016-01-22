@@ -10,8 +10,6 @@
 *.tmp
 *.user
 *.userprefs
-*.sln
-*.csproj
 *.unityproj
 *.pidb
 *.booproj

@@ -2,6 +2,8 @@
 using System;
 
 using Random = UnityEngine.Random;
+using System.Collections.Generic;
+
 namespace CombatSystem
 {
     [Serializable]
@@ -13,6 +15,8 @@ namespace CombatSystem
         public int Defence;
         public int Health;
         public int Experience;
+        public List<int> Abilities;
+
         public TeamPositionType Position;
 
         public void Randomize()
@@ -23,13 +27,15 @@ namespace CombatSystem
             this.Defence = Random.Range(1, 10);
             this.Health = Random.Range(50, 100);
 
-            this.Position = TeamPositionType.NONE;
-
+            this.Position = TeamPositionType.FRONTLINE;
             this.Name = "Fighter_" + Math.Floor(Random.value * 1000);
-        }
 
-        public FighterInfo()
-        {
+            if (this.Abilities == null)
+            {
+                this.Abilities = new List<int>();
+            }
+
+            this.Abilities.Add(0);
         }
 
         public FighterInfo(bool randomize = false)
@@ -38,6 +44,21 @@ namespace CombatSystem
             {
                 this.Randomize();
             }
+        }
+
+        public FighterInfo Clone()
+        {
+            FighterInfo clone = new FighterInfo();
+            clone.Abilities = this.Abilities;
+            clone.Attack = this.Attack;
+            clone.Defence = this.Defence;
+            clone.Experience = this.Experience;
+            clone.Health = this.Health;
+            clone.Position = this.Position;
+            clone.Speed = this.Speed;
+            clone.Name = this.Name;
+
+            return clone;
         }
     }
 }

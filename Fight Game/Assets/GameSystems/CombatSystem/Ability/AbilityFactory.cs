@@ -1,11 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using Random = UnityEngine.Random;
+
 namespace CombatSystem
 {
     public class AbilityFactory
     {
-        private static AbilityFactory factory;
+        private static AbilityFactory factory = null;
+        public static AbilityFactory Factory {
+            get
+            {
+                if(factory == null)
+                {
+                    factory = new AbilityFactory();
+                    factory.initializeAbilities();
+                }
+
+                return factory;
+            }
+        }
+
         private AbilityFactory() { }
 
         private List<Ability> abilities = null;
@@ -22,19 +37,22 @@ namespace CombatSystem
             }
         }
 
-        public static void Start()
+        public Ability RandomAbility()
         {
-            factory = new AbilityFactory();
-            factory.initializeAbilities();
+            return this.Abilities[Random.Range(0, this.Abilities.Count - 1)];
         }
 
         private void initializeAbilities() 
         {
             // default melee ability
-            
-            this.Abilities.Add(new Ability(new Effect((targets) => {
-                
-            })));
+            this.Abilities.Add(new Ability((targets, fighterStatus) =>
+            {
+                // implement some cool stuff for this ability to do...
+                targets.ForEach((fighter) => { fighter.info.Health -= fighterStatus.info.Attack; });
+            })
+            {
+                TargetTeam = AbilityTeamTarget.OTHER
+            });
         }
     }
 }

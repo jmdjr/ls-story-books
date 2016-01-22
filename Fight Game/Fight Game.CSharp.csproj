@@ -12,12 +12,14 @@
     <ProjectTypeGuids>{E097FAD1-6243-4DAD-9C02-E9B9EFC3FFC1};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Unity Web v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <TargetFrameworkProfile>Unity Full v3.5</TargetFrameworkProfile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>WebPlayer:6</UnityBuildTarget>
     <UnityVersion>5.3.1f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -68,8 +70,8 @@
   <ItemGroup>
     <Compile Include="Assets\GameSystems\CombatSystem\Ability\Ability.cs" />
     <Compile Include="Assets\GameSystems\CombatSystem\Ability\AbilityFactory.cs" />
+    <Compile Include="Assets\GameSystems\CombatSystem\Ability\AbilityTeamTarget.cs" />
     <Compile Include="Assets\GameSystems\CombatSystem\Ability\AbilityType.cs" />
-    <Compile Include="Assets\GameSystems\CombatSystem\Ability\Effect.cs" />
     <Compile Include="Assets\GameSystems\CombatSystem\Fight\Fight.cs" />
     <Compile Include="Assets\GameSystems\CombatSystem\Fight\FighterFightStatus.cs" />
     <Compile Include="Assets\GameSystems\CombatSystem\Fight\FighterTargetsGroup.cs" />
@@ -80,11 +82,11 @@
     <Compile Include="Assets\GameSystems\CombatSystem\FighterTeam\FighterTeam.cs" />
     <Compile Include="Assets\GameSystems\CombatSystem\FighterTeam\FighterTeamInfo.cs" />
     <Compile Include="Assets\GameSystems\CombatSystem\FighterTeam\TeamPositionType.cs" />
-    <Compile Include="Assets\GameSystems\Utilities\BasicMechanics.cs" />
     <Compile Include="Assets\MonoBehavior Scripts\FighterScript.cs" />
     <Compile Include="Assets\MonoBehavior Scripts\GameControlScript.cs" />
     <Compile Include="Assets\MonoBehavior Scripts\TeamFightScript.cs" />
     <Compile Include="Assets\MonoBehavior Scripts\TeamManagerScript.cs" />
+    <Compile Include="Assets\Utilities\BasicMechanics.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Standard Assets\CrossPlatformInput\CrossPlatformInputGuidelines.txt" />
