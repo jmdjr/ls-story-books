@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using UnityEngine;
 namespace Core.CombatSystem
 {
     public class FighterFightStatus
@@ -15,6 +17,7 @@ namespace Core.CombatSystem
 
         public event ReportFightStatus OnWindup;
         public event ReportFightStatus OnActivateAbility;
+        public event ReportFightStatus OnCompleteAbility;
         public event ReportFightStatus OnDeath;
 
         public int IdleTime()
@@ -45,7 +48,7 @@ namespace Core.CombatSystem
         public void SetIdle()
         {
             // calculate and set idleTime from current Speed.
-            this.idleTime = 100 / this.Info.Speed;
+            this.idleTime = 200 / this.Info.Speed;
         }
 
         public bool isAlive()
@@ -66,15 +69,29 @@ namespace Core.CombatSystem
         public void ActivateAbility(FighterTeamFightStatus OpposingTeam)
         {
             // choose ability to activate
-            Ability activeAbility = fighter.ChooseAbility();
-            ActiveAbility = activeAbility;
-            if (activeAbility != null)
-            {
-                FighterTeamFightStatus targetTeam = activeAbility.TargetTeam == AbilityTeamTarget.OTHER ? OpposingTeam : this.Team;
-                FighterTargetsGroup targets = targetTeam.findTargets(activeAbility);
+            ActiveAbility = fighter.ChooseAbility();
 
-                activeAbility.Effect(targets, this);
+            if (ActiveAbility != null)
+            {
+                FighterTeamFightStatus targetTeam = ActiveAbility.TargetTeam == AbilityTeamTarget.OTHER ? OpposingTeam : this.Team;
+                FighterTargetsGroup targets = targetTeam.findTargets(ActiveAbility);
+
+                if (this.OnActivateAbility != null)
+                {
+                    this.OnActivateAbility(this);
+                    //yield return new WaitForEndOfFrame();
+                }
+
+                ActiveAbility.Effect(targets, this);
+
+                if (this.OnCompleteAbility != null)
+                {
+                    this.OnCompleteAbility(this);
+                    //yield return new WaitForEndOfFrame();
+                }
+
                 targets.ForEach(f => f.isAlive());
+
                 this.SetIdle();
             }
         }

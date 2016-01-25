@@ -94,6 +94,7 @@ public class FightSceneScript : MonoBehaviour {
                 this.runFight = false;
             }
         }
+
     }
 
     void OnApplicationQuit()
