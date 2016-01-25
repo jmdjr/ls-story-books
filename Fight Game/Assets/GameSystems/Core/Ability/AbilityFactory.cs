@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Random = UnityEngine.Random;
 
-namespace CombatSystem
+namespace Core
 {
     public class AbilityFactory
     {
@@ -48,7 +48,7 @@ namespace CombatSystem
             this.Abilities.Add(new Ability((targets, fighterStatus) =>
             {
                 // implement some cool stuff for this ability to do...
-                targets.ForEach((fighter) => { fighter.info.Health -= fighterStatus.info.Attack; });
+                targets.ForEach((fighter) => { fighter.Info.Health -= fighterStatus.Info.Attack; });
             })
             {
                 TargetTeam = AbilityTeamTarget.OTHER

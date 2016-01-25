@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CombatSystem
+namespace Core.CombatSystem
 {
     public class Fight 
     {
@@ -13,8 +13,8 @@ namespace CombatSystem
 
         private List<FighterFightStatus> FightOrder;
 
-        public delegate void FighterBeginAttack(FighterFightStatus fighterStatus);
-        public event FighterBeginAttack FighterBegin;
+        public delegate void TeamStatusUpdate(FighterTeamFightStatus Alpha, FighterTeamFightStatus Beta);
+        public event TeamStatusUpdate TeamUpdate;
 
         public Fight(FighterTeam alpha, FighterTeam beta)
         {
@@ -25,12 +25,14 @@ namespace CombatSystem
 
             FightOrder.AddRange(this.Alpha.SetupFightStatus());
             FightOrder.AddRange(this.Beta.SetupFightStatus());
+            FightOrder.Sort((fighter1, fighter2) => { return fighter1.Info.Speed.CompareTo(fighter2.Info.Speed); });
+
 
             // Each fighter is now initialized with Fight info, which tracks their idle timers and is used to determine if they are ready or not.
         }
         private FighterFightStatus getNextFighter()
         {
-            return FightOrder.FirstOrDefault((f) => f.AttackReady());
+            return FightOrder.Where((f) => f.AttackReady()).ToList().RandomOne();
         }
 
         //May convert this into an Enumerator for use in Coroutines or something, but this is the fight cycle.
@@ -38,30 +40,21 @@ namespace CombatSystem
         {
             // runs the basic steps in combat, through one cycle.
             // get next available fighter, if none, step everyone's counters. 
-            FightOrder.ForEach((f) => f.StepIdle());
             FighterFightStatus activeFighter = this.getNextFighter();
+
+            if (this.TeamUpdate != null)
+            {
+                this.TeamUpdate(Alpha, Beta);
+            }
 
             if (activeFighter != null)
             {
                 FighterTeamFightStatus OtherTeam = activeFighter.Team == this.Alpha ? this.Beta : this.Alpha;
-
-                if (this.FighterBegin != null)
-                {
-                    this.FighterBegin(activeFighter);
-                }
-
-                // choose ability to activate
-                Ability activeAbility = activeFighter.fighter.ChooseAbility();
-
-                if(activeAbility != null)
-                {
-                    FighterTeamFightStatus targetTeam = activeAbility.TargetTeam == AbilityTeamTarget.OTHER ? OtherTeam : activeFighter.Team;
-                    FighterTargetsGroup targets = targetTeam.findTargets(activeAbility);
-
-                    activeAbility.Effect(targets, activeFighter);
-                }
-
-                activeFighter.SetIdle();
+                activeFighter.ActivateAbility(OtherTeam);
+            }
+            else
+            {
+                FightOrder.ForEach((f) => f.StepIdle());
             }
         }
 

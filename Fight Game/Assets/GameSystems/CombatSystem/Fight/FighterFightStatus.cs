@@ -1,19 +1,31 @@
 ﻿using System;
-namespace CombatSystem
+namespace Core.CombatSystem
 {
     public class FighterFightStatus
     {
-        // this info should be able to be altered 
-        public FighterInfo info;
-        public Fighter fighter;
-        public FighterTeamFightStatus Team;
-        public int idleTime;
+        public delegate void ReportFightStatus(FighterFightStatus fighterStatus);
 
+        // this info should be able to be altered 
+        public Fighter fighter;
+        public FighterInfo Info;
+        public FighterTeamFightStatus Team;
+        public Ability ActiveAbility;
+        private int idleTime;
+        public bool IsDead = false;
+
+        public event ReportFightStatus OnWindup;
+        public event ReportFightStatus OnActivateAbility;
+        public event ReportFightStatus OnDeath;
+
+        public int IdleTime()
+        {
+            return this.idleTime;
+        }
         public FighterFightStatus(Fighter fighter, FighterTeamFightStatus team)
         {
             this.fighter = fighter;
             this.Team = team;
-            this.info = fighter.Info.Clone();
+            this.Info = fighter.Info.Clone();
 
             // Calculate idleTime from speed.
             this.SetIdle();
@@ -33,12 +45,38 @@ namespace CombatSystem
         public void SetIdle()
         {
             // calculate and set idleTime from current Speed.
-            this.idleTime = 100 / this.info.Speed;
+            this.idleTime = 100 / this.Info.Speed;
         }
 
         public bool isAlive()
         {
-            return this.info.Health > 0;
+            if(this.Info.Health <= 0 && !this.IsDead)
+            {
+                this.IsDead = true;
+
+                if(this.OnDeath != null)
+                {
+                    this.OnDeath(this);
+                }
+            }
+
+            return this.Info.Health > 0;
+        }
+
+        public void ActivateAbility(FighterTeamFightStatus OpposingTeam)
+        {
+            // choose ability to activate
+            Ability activeAbility = fighter.ChooseAbility();
+            ActiveAbility = activeAbility;
+            if (activeAbility != null)
+            {
+                FighterTeamFightStatus targetTeam = activeAbility.TargetTeam == AbilityTeamTarget.OTHER ? OpposingTeam : this.Team;
+                FighterTargetsGroup targets = targetTeam.findTargets(activeAbility);
+
+                activeAbility.Effect(targets, this);
+                targets.ForEach(f => f.isAlive());
+                this.SetIdle();
+            }
         }
     }
 }

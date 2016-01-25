@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace CombatSystem
+namespace Core.CombatSystem
 {
     public class FighterTeamFightStatus
     {
@@ -46,7 +46,7 @@ namespace CombatSystem
         {
             string teamStatus = this.TeamInfo.TeamName + "\n";
             this.TeamStatus.ForEach((fighterStatus) => {
-                teamStatus += String.Format("{0, -13} : Idle: {1, 5} Health: {2, 5} Attack: {3, 5}\n", fighterStatus.info.Name, fighterStatus.idleTime, fighterStatus.info.Health, fighterStatus.info.Attack);
+                teamStatus += String.Format("{0, -13} : Idle: {1, 5} Health: {2, 5} Attack: {3, 5}\n", fighterStatus.Info.Name, fighterStatus.IdleTime(), fighterStatus.Info.Health, fighterStatus.Info.Attack);
             });
 
             return teamStatus;

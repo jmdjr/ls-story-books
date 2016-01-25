@@ -2,7 +2,8 @@
 using UnityEngine;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
-using CombatSystem;
+using Core;
+using Core.CombatSystem;
 
 public static class BasicMechanics {
     static string saveFile;
@@ -11,13 +12,13 @@ public static class BasicMechanics {
         {
             if(saveFile == null)
             {
-                saveFile = Application.persistentDataPath + "/playerinfo.dat";
+                saveFile = Application.persistentDataPath + "/MyGame.fight";
             }
 
             return saveFile;
         }
     }
-    public static void Save(FighterTeamInfo teamInfo)
+    public static void Save(ManagerInfo teamInfo)
     {
         BinaryFormatter bf = new BinaryFormatter();
         FileStream file = File.Open(BasicMechanics.SaveFile, FileMode.OpenOrCreate);
@@ -25,13 +26,13 @@ public static class BasicMechanics {
         file.Close();
     }
 
-    public static FighterTeamInfo Load()
+    public static ManagerInfo Load()
     {
         if(File.Exists(BasicMechanics.SaveFile))
         {
             BinaryFormatter bf = new BinaryFormatter();
             FileStream file = File.Open(BasicMechanics.SaveFile, FileMode.Open);
-            FighterTeamInfo teamInfo = (FighterTeamInfo)bf.Deserialize(file);
+            ManagerInfo teamInfo = (ManagerInfo)bf.Deserialize(file);
             file.Close();
             return teamInfo;
         }

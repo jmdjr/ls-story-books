@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CombatSystem
+namespace Core.CombatSystem
 {
     public class FighterTargetsGroup: List<FighterFightStatus>
     {

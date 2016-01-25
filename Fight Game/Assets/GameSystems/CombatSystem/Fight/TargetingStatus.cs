@@ -1,4 +1,4 @@
-﻿namespace CombatSystem
+﻿namespace Core.CombatSystem
 {
     public class TargetingStatus
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace CombatSystem
+namespace Core
 {
     public class FighterTeam
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace CombatSystem
+namespace Core
 {
     [Serializable]
     public class FighterTeamInfo

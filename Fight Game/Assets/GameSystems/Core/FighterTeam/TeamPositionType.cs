@@ -1,4 +1,4 @@
-﻿namespace CombatSystem
+﻿namespace Core
 {
     public enum TeamPositionType
     {

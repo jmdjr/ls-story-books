@@ -4,7 +4,7 @@ using System;
 using Random = UnityEngine.Random;
 using System.Collections.Generic;
 
-namespace CombatSystem
+namespace Core
 {
     [Serializable]
     public class FighterInfo
