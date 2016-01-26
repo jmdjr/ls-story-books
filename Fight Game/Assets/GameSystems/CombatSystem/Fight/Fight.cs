@@ -12,7 +12,7 @@ namespace Core.CombatSystem
         public FighterTeamFightStatus Alpha;
         public FighterTeamFightStatus Beta;
 
-        private List<FighterFightStatus> FightOrder;
+        public List<FighterFightStatus> FightOrder;
 
         public delegate void TeamStatusUpdate(FighterTeamFightStatus Alpha, FighterTeamFightStatus Beta);
         public event TeamStatusUpdate TeamUpdate;

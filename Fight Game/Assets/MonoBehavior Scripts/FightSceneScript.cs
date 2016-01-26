@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using Core;
 using Core.CombatSystem;
 using Core.ManagementSystem;
@@ -59,8 +60,8 @@ public class FightSceneScript : MonoBehaviour {
         alphaTeamObject.GetComponent<TeamFightScript>().reference = this.Fight.Alpha;
         betaTeamObject.GetComponent<TeamFightScript>().reference = this.Fight.Beta;
 
-        alphaTeamObject.transform.position = new Vector3(-3, 1, 0);
-        betaTeamObject.transform.position = new Vector3(3, 1, 0);
+        alphaTeamObject.transform.localPosition = new Vector3(-3, 1, 0);
+        betaTeamObject.transform.localPosition = new Vector3(3, 1, 0);
         betaTeamObject.transform.Rotate(new Vector3(0, 180, 0));
 
         alphaTeamObject.name = this.Fight.Alpha.TeamInfo.TeamName;
@@ -70,7 +71,7 @@ public class FightSceneScript : MonoBehaviour {
     void updateStatus(FighterTeamFightStatus Alpha, FighterTeamFightStatus Beta)
     {
         //Update team info...
-        Debug.Log(Alpha.DebugInfo() + "\n" + Beta.DebugInfo());
+        //Debug.Log(Alpha.DebugInfo() + "\n" + Beta.DebugInfo());
     }
 
     // Update is called once per framee
@@ -79,9 +80,14 @@ public class FightSceneScript : MonoBehaviour {
         RunFight();
     }
 
+    bool anyoneAnimating(Fight fight)
+    {
+        return fight.FightOrder.TrueForAll(fighter => { return !fighter.IsAnimating; });
+
+    }
     void RunFight()
     {
-        if (this.Fight != null && this.runFight)
+        if (this.Fight != null && this.runFight && anyoneAnimating(this.Fight))
         {
             FighterTeamFightStatus winningTeam = this.Fight.GetWinner();
             if (winningTeam == null)

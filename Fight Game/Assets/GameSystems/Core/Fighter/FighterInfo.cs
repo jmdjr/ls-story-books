@@ -22,7 +22,7 @@ namespace Core
         public void Randomize()
         {
             this.Experience = 0;
-            this.Speed = Random.Range(1, 5);
+            this.Speed = Random.Range(1, 25);
             this.Attack = Random.Range(1, 10);
             this.Defence = Random.Range(1, 10);
             this.Health = Random.Range(50, 100);

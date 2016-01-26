@@ -13,10 +13,11 @@ public class TeamFightScript : MonoBehaviour {
         {
             float vertical = 0;
             float horizontal = 0;
+            float zOrder = 0;
             float scale = 0.95f;
             foreach (var status in reference.TeamStatus)
             {
-                GenerateFighterObject(new Vector3(horizontal, vertical, 0), new Vector3(scale, scale), status);
+                GenerateFighterObject(new Vector3(horizontal, vertical, zOrder), new Vector3(scale, scale), status);
                 horizontal -= 0.65f;
                 vertical -= 1.5f;
                 scale += 0.25f;

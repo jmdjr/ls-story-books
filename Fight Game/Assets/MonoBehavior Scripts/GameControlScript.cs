@@ -7,7 +7,6 @@ using Core.ManagementSystem;
 public class GameControlScript: MonoBehaviour
 {
     public static GameControlScript control;
-    public GameObject FightScenePrefab;
 
     private Manager manager = null;
     public Manager Manager {
@@ -37,8 +36,6 @@ public class GameControlScript: MonoBehaviour
 	// Use this for initialization
     void Start()
     {
-        GameObject go = Instantiate<GameObject>(FightScenePrefab);
-        go.name = "Fight";
     }
 
     // Update is called once per frame

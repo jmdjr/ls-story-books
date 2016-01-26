@@ -14,11 +14,20 @@ namespace Core.CombatSystem
         public Ability ActiveAbility;
         private int idleTime;
         public bool IsDead = false;
+        public bool IsAnimating = false;
+        public int RealAttack
+        {
+            get {
+                return this.Info.Attack;
+            }
+        }
 
         public event ReportFightStatus OnWindup;
         public event ReportFightStatus OnActivateAbility;
         public event ReportFightStatus OnCompleteAbility;
         public event ReportFightStatus OnDeath;
+        public event ReportFightStatus OnDamage;
+        public event ReportFightStatus OnHeal;
 
         public int IdleTime()
         {
@@ -48,7 +57,7 @@ namespace Core.CombatSystem
         public void SetIdle()
         {
             // calculate and set idleTime from current Speed.
-            this.idleTime = 200 / this.Info.Speed;
+            this.idleTime = 50 / this.Info.Speed;
         }
 
         public bool isAlive()
@@ -66,6 +75,29 @@ namespace Core.CombatSystem
             return this.Info.Health > 0;
         }
 
+        public void AlterHealth(int amount)
+        {
+            // place events here for damage/healing
+            if (amount < 0)
+            {
+                // inflicting damage
+                if (OnDamage != null)
+                {
+                    this.OnDamage(this);
+                }
+            }
+            else if(amount > 0)
+            {
+                // healing damage
+                if (OnHeal != null)
+                {
+                    this.OnHeal(this);
+                }
+            }
+
+            this.Info.Health += amount;
+        }
+
         public void ActivateAbility(FighterTeamFightStatus OpposingTeam)
         {
             // choose ability to activate
@@ -79,7 +111,6 @@ namespace Core.CombatSystem
                 if (this.OnActivateAbility != null)
                 {
                     this.OnActivateAbility(this);
-                    //yield return new WaitForEndOfFrame();
                 }
 
                 ActiveAbility.Effect(targets, this);
@@ -87,7 +118,6 @@ namespace Core.CombatSystem
                 if (this.OnCompleteAbility != null)
                 {
                     this.OnCompleteAbility(this);
-                    //yield return new WaitForEndOfFrame();
                 }
 
                 targets.ForEach(f => f.isAlive());
