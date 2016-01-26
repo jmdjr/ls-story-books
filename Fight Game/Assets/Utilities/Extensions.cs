@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-using Randomize = UnityEngine.Random;
+using Random = UnityEngine.Random;
 
 public static class Extensions
 {
@@ -14,7 +14,7 @@ public static class Extensions
 
         if(collection.Count > 0)
         {
-            item = collection[Randomize.Range(0, collection.Count())];
+            item = collection[Random.Range(0, collection.Count())];
         }
 
         return item;

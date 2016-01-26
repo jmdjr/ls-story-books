@@ -48,7 +48,7 @@ namespace Core
             this.Abilities.Add(new Ability((targets, fighterStatus) =>
             {
                 // implement some cool stuff for this ability to do...
-                targets.AlterRandomHealth(-1 * Random.Range(1, fighterStatus.RealAttack));
+                targets.AlterRandomHealth(-1 * Random.Range(1, fighterStatus.RealAttack * 2));
             })
             {
                 TargetTeam = AbilityTeamTarget.OTHER

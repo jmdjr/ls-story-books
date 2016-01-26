@@ -57,7 +57,7 @@ namespace Core.CombatSystem
         public void SetIdle()
         {
             // calculate and set idleTime from current Speed.
-            this.idleTime = 50 / this.Info.Speed;
+            this.idleTime = 100 / this.Info.Speed;
         }
 
         public bool isAlive()
@@ -65,6 +65,7 @@ namespace Core.CombatSystem
             if(this.Info.Health <= 0 && !this.IsDead)
             {
                 this.IsDead = true;
+                this.idleTime = 0;
 
                 if(this.OnDeath != null)
                 {
@@ -77,14 +78,19 @@ namespace Core.CombatSystem
 
         public void AlterHealth(int amount)
         {
-            // place events here for damage/healing
+            // dealing with damage/healing
             if (amount < 0)
             {
                 // inflicting damage
-                if (OnDamage != null)
+                amount = Math.Abs(amount);
+                int trueDamage = amount > Info.Defence ? amount - Info.Defence : 0;
+
+                if (OnDamage != null && trueDamage > 0)
                 {
                     this.OnDamage(this);
                 }
+
+                this.Info.Health -= trueDamage;
             }
             else if(amount > 0)
             {
@@ -93,9 +99,8 @@ namespace Core.CombatSystem
                 {
                     this.OnHeal(this);
                 }
+                this.Info.Health += amount;
             }
-
-            this.Info.Health += amount;
         }
 
         public void ActivateAbility(FighterTeamFightStatus OpposingTeam)

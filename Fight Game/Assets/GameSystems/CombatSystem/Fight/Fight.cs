@@ -33,9 +33,12 @@ namespace Core.CombatSystem
         }
         private FighterFightStatus getNextFighter()
         {
-            return FightOrder.Where((f) => f.AttackReady()).ToList().RandomOne();
+            return ActiveFighters().Where((f) => f.AttackReady()).ToList().RandomOne();
         }
-
+        private List<FighterFightStatus> ActiveFighters()
+        {
+            return FightOrder.Where((f) => f.isAlive()).ToList();
+        }
         //May convert this into an Enumerator for use in Coroutines or something, but this is the fight cycle.
         public void StepFight()
         {
@@ -50,7 +53,7 @@ namespace Core.CombatSystem
             }
             else
             {
-                FightOrder.ForEach((f) => f.StepIdle());
+                ActiveFighters().ForEach((f) => f.StepIdle());
             }
 
             if (this.TeamUpdate != null)

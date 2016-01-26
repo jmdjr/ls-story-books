@@ -22,10 +22,10 @@ namespace Core
         public void Randomize()
         {
             this.Experience = 0;
-            this.Speed = Random.Range(1, 25);
-            this.Attack = Random.Range(1, 10);
-            this.Defence = Random.Range(1, 10);
-            this.Health = Random.Range(50, 100);
+            this.Speed = Random.Range(1, 10);
+            this.Attack = Random.Range(3, 10);
+            this.Defence = Random.Range(1, 5);
+            this.Health = Random.Range(10, 50);
 
             this.Position = TeamPositionType.FRONTLINE;
             this.Name = "Fighter_" + Math.Floor(Random.value * 1000);

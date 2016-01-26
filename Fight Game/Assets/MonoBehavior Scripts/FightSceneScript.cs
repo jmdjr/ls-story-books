@@ -100,7 +100,11 @@ public class FightSceneScript : MonoBehaviour {
     // Update is called once per framee
     void Update()
     {
-        RunFight();
+        if (this.runFight)
+        {
+            StartCoroutine(RunFight());
+            this.runFight = false;
+        }
     }
 
     bool anyoneAnimating(Fight fight)
@@ -108,38 +112,48 @@ public class FightSceneScript : MonoBehaviour {
         return fight.FightOrder.TrueForAll(fighter => { return !fighter.IsAnimating; });
 
     }
-    void RunFight()
+    IEnumerator RunFight()
     {
-        if (this.Fight != null && this.runFight && anyoneAnimating(this.Fight))
+        if(this.Fight != null) 
         {
             FighterTeamFightStatus winningTeam = this.Fight.GetWinner();
-            if (winningTeam == null)
-            {
-                this.Fight.StepFight();
-            }
-            else
-            {
-                Debug.Log(winningTeam.TeamInfo.TeamName + "is the winner!!!\n" + Fight.Alpha.DebugInfo() + "\n" + Fight.Beta.DebugInfo());
-                this.runFight = false;
-            }
-        }
 
+            while (winningTeam == null)
+            {
+                if (anyoneAnimating(this.Fight))
+                {
+                    this.Fight.StepFight();
+                    winningTeam = this.Fight.GetWinner();
+                }
+
+                yield return new WaitForSeconds(0.10f);
+            }
+
+            Debug.Log(winningTeam.TeamInfo.TeamName + "is the winner!!!\n" + Fight.Alpha.DebugInfo() + "\n" + Fight.Beta.DebugInfo());
+        }
+        
     }
 
     void OnApplicationQuit()
     {
     }
-
+    private bool textRoutinesLaunched = false;
     void onTeamUpdate(FighterTeamFightStatus Alpha, FighterTeamFightStatus Beta)
     {
-        if (AlphaTextObject != null)
+        if (!textRoutinesLaunched)
         {
-            AlphaTextObject.GetComponent<Text>().text = TeamTextPrint(Alpha);
+            StartCoroutine(UpdateTeamText(Alpha, AlphaTextObject));
+            StartCoroutine(UpdateTeamText(Beta, BetaTextObject));
+            textRoutinesLaunched = true;
         }
+    }
 
-        if (BetaTextObject != null)
+    IEnumerator UpdateTeamText(FighterTeamFightStatus team, GameObject textObject)
+    {
+        while (team.anyoneLeftAlive() && textObject != null)
         {
-            BetaTextObject.GetComponent<Text>().text = TeamTextPrint(Beta);
+            textObject.GetComponent<Text>().text = TeamTextPrint(team);
+            yield return new WaitForFixedUpdate();
         }
     }
 
