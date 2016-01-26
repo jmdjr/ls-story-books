@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Core;
 using Core.CombatSystem;
 using Core.ManagementSystem;
+using UnityEngine.UI;
 
 public class FightSceneScript : MonoBehaviour {
 
@@ -14,8 +15,14 @@ public class FightSceneScript : MonoBehaviour {
     private Manager managerReference;
     private FighterTeam yourTeam;
 
+    public GameObject StatBoard;
+    public GameObject TextPrefab;
+
+    private GameObject AlphaTextObject;
+    private GameObject BetaTextObject;
+
     private bool runFight = true;
-    void Start ()
+    void Start()
     {
         controlReference = GameControlScript.control;
         managerReference = controlReference.Manager;
@@ -25,8 +32,30 @@ public class FightSceneScript : MonoBehaviour {
 
         Debug.Log("Fight Beginning...");
         Debug.Log(this.Fight.Alpha.DebugInfo() + "\n" + this.Fight.Beta.DebugInfo());
-        this.Fight.TeamUpdate += updateStatus;
+        this.Fight.TeamUpdate += onTeamUpdate;
+
+        if (StatBoard != null)
+        {
+            GameObject board = Instantiate<GameObject>(StatBoard);
+
+            board.transform.SetParent(this.transform);
+
+            if (TextPrefab != null)
+            {
+                AlphaTextObject = Instantiate<GameObject>(TextPrefab);
+                AlphaTextObject.name = "AlphaTeamText";
+                AlphaTextObject.transform.SetParent(board.transform);
+                AlphaTextObject.transform.localPosition = new Vector3(-200, -50, 0);
+
+                BetaTextObject = Instantiate<GameObject>(TextPrefab);
+                BetaTextObject.name = "BetaTeamText";
+                BetaTextObject.transform.SetParent(board.transform);
+                BetaTextObject.transform.localPosition = new Vector3(100, -50, 0);
+            }
+
+        }
     }
+
     void InitializeFight()
     {
 
@@ -68,12 +97,6 @@ public class FightSceneScript : MonoBehaviour {
         betaTeamObject.name = this.Fight.Beta.TeamInfo.TeamName;
     }
 
-    void updateStatus(FighterTeamFightStatus Alpha, FighterTeamFightStatus Beta)
-    {
-        //Update team info...
-        //Debug.Log(Alpha.DebugInfo() + "\n" + Beta.DebugInfo());
-    }
-
     // Update is called once per framee
     void Update()
     {
@@ -105,5 +128,30 @@ public class FightSceneScript : MonoBehaviour {
 
     void OnApplicationQuit()
     {
+    }
+
+    void onTeamUpdate(FighterTeamFightStatus Alpha, FighterTeamFightStatus Beta)
+    {
+        if (AlphaTextObject != null)
+        {
+            AlphaTextObject.GetComponent<Text>().text = TeamTextPrint(Alpha);
+        }
+
+        if (BetaTextObject != null)
+        {
+            BetaTextObject.GetComponent<Text>().text = TeamTextPrint(Beta);
+        }
+    }
+
+    private string TeamTextPrint(FighterTeamFightStatus team)
+    {
+        string text = team.TeamInfo.TeamName + "\n";
+
+        foreach (FighterFightStatus fighter in team.TeamStatus)
+        {
+            text += string.Format("Name:{0, 10} Ticks: {1, 3} Health: {2, 4} Attack: {3, 2} \n", fighter.Info.Name, fighter.IdleTime(), fighter.Info.Health, fighter.RealAttack);
+        }
+
+        return text;
     }
 }

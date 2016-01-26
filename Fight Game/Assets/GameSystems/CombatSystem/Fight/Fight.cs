@@ -43,11 +43,6 @@ namespace Core.CombatSystem
             // get next available fighter, if none, step everyone's counters. 
             FighterFightStatus activeFighter = this.getNextFighter();
 
-            if (this.TeamUpdate != null)
-            {
-                this.TeamUpdate(Alpha, Beta);
-            }
-
             if (activeFighter != null)
             {
                 FighterTeamFightStatus OtherTeam = activeFighter.Team == this.Alpha ? this.Beta : this.Alpha;
@@ -57,6 +52,12 @@ namespace Core.CombatSystem
             {
                 FightOrder.ForEach((f) => f.StepIdle());
             }
+
+            if (this.TeamUpdate != null)
+            {
+                this.TeamUpdate(Alpha, Beta);
+            }
+
         }
 
         public bool HasWinner()
