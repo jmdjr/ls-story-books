@@ -17,7 +17,7 @@ public class TeamFightScript : MonoBehaviour {
             float horizontal = 0;
             float zOrder = 0;
             float scale = 2f;
-            float zOrderDir = transform.localRotation.x == 180 ? 0.1f : -0.1f;
+            float zOrderDir = transform.localRotation.y == 1f ? 0.1f : -0.1f;
 
             foreach (var status in reference.TeamStatus)
             {
