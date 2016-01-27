@@ -28,7 +28,7 @@ namespace Core
             this.Health = Random.Range(10, 50);
 
             this.Position = TeamPositionType.FRONTLINE;
-            this.Name = "Fighter_" + Math.Floor(Random.value * 1000);
+            this.Name = MarkovGenerator.GenerateName(5, 8);
 
             if (this.Abilities == null)
             {

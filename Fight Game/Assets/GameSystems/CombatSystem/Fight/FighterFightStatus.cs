@@ -27,6 +27,7 @@ namespace Core.CombatSystem
         public event ReportFightStatus OnCompleteAbility;
         public event ReportFightStatus OnDeath;
         public event ReportFightStatus OnDamage;
+        public event ReportFightStatus OnDefend;
         public event ReportFightStatus OnHeal;
 
         public int IdleTime()
@@ -88,6 +89,11 @@ namespace Core.CombatSystem
                 if (OnDamage != null && trueDamage > 0)
                 {
                     this.OnDamage(this);
+                }
+
+                if (trueDamage == 0 && OnDefend != null)
+                {
+                    OnDefend(this);
                 }
 
                 this.Info.Health -= trueDamage;

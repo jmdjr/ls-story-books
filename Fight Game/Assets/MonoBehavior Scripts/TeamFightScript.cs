@@ -1,10 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 using Core.CombatSystem;
+using System.Collections.Generic;
 public class TeamFightScript : MonoBehaviour {
 
     public FighterTeamFightStatus reference;
     public GameObject FighterPrefab;
+    public List<Transform> fighterTransforms;
 
 	// Use this for initialization
     void Start()
@@ -14,13 +16,16 @@ public class TeamFightScript : MonoBehaviour {
             float vertical = 0;
             float horizontal = 0;
             float zOrder = 0;
-            float scale = 0.95f;
+            float scale = 2f;
+            float zOrderDir = transform.localRotation.x == 180 ? 0.1f : -0.1f;
+
             foreach (var status in reference.TeamStatus)
             {
-                GenerateFighterObject(new Vector3(horizontal, vertical, zOrder), new Vector3(scale, scale), status);
+                GenerateFighterObject(new Vector3(horizontal, vertical, zOrder), new Vector3(scale , scale), status);
                 horizontal -= 0.65f;
                 vertical -= 1.5f;
                 scale += 0.25f;
+                zOrder += 0.1f * zOrderDir;
             }
         }
 	}
