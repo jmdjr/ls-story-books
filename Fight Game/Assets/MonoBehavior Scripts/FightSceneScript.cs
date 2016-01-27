@@ -55,6 +55,7 @@ public class FightSceneScript : MonoBehaviour {
 
         }
     }
+    
 
     void InitializeFight()
     {

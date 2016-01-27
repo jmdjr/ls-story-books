@@ -3,11 +3,11 @@ using System.Collections;
 using Core;
 using Core.CombatSystem;
 using Core.ManagementSystem;
+using UnityEngine.SceneManagement;
 
 public class GameControlScript: MonoBehaviour
 {
     public static GameControlScript control;
-
     private Manager manager = null;
     public Manager Manager {
         get
@@ -31,6 +31,7 @@ public class GameControlScript: MonoBehaviour
         {
             Destroy(gameObject);
         }
+
     }
 
 	// Use this for initialization
@@ -44,9 +45,7 @@ public class GameControlScript: MonoBehaviour
 	}
 
     void OnGUI() { 
-        
     }
-
 
     public void LoadManager()
     {

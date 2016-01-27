@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.3.1f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -93,6 +95,7 @@
     <Compile Include="Assets\MonoBehavior Scripts\FightSceneScript.cs" />
     <Compile Include="Assets\MonoBehavior Scripts\FighterScript.cs" />
     <Compile Include="Assets\MonoBehavior Scripts\GameControlScript.cs" />
+    <Compile Include="Assets\MonoBehavior Scripts\SceneManagerScript.cs" />
     <Compile Include="Assets\MonoBehavior Scripts\TeamFightScript.cs" />
     <Compile Include="Assets\MonoBehavior Scripts\TeamManagerScript.cs" />
     <Compile Include="Assets\Utilities\BasicMechanics.cs" />
