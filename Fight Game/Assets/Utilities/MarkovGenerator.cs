@@ -54,7 +54,7 @@ public static class MarkovGenerator {
                     chains[currentChar] = new List<char>();
                 }
 
-                if (temp.Length > 1 && chains[currentChar].IndexOf(temp[1]) == -1)
+                if (temp.Length > 1 /*&& chains[currentChar].IndexOf(temp[1]) == -1*/)
                 {
                     chains[currentChar].Add(temp[1]);
                 }

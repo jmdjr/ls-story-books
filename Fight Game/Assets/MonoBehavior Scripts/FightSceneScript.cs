@@ -141,20 +141,16 @@ public class FightSceneScript : MonoBehaviour {
     private bool textRoutinesLaunched = false;
     void onTeamUpdate(FighterTeamFightStatus Alpha, FighterTeamFightStatus Beta)
     {
-        if (!textRoutinesLaunched)
-        {
-            StartCoroutine(UpdateTeamText(Alpha, AlphaTextObject));
-            StartCoroutine(UpdateTeamText(Beta, BetaTextObject));
-            textRoutinesLaunched = true;
-        }
+        StartCoroutine(UpdateTeamText(Alpha, AlphaTextObject));
+        StartCoroutine(UpdateTeamText(Beta, BetaTextObject));
     }
 
     IEnumerator UpdateTeamText(FighterTeamFightStatus team, GameObject textObject)
     {
-        while (team.anyoneLeftAlive() && textObject != null)
+        if (team.anyoneLeftAlive() && textObject != null)
         {
             textObject.GetComponent<Text>().text = TeamTextPrint(team);
-            yield return new WaitForFixedUpdate();
+            yield return 0;
         }
     }
 

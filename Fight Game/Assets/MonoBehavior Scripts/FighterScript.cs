@@ -145,6 +145,7 @@ public class FighterScript : MonoBehaviour
     {
         var obj = this.GetComponent<SpriteRenderer>();
         obj.color = Red;
+        this.animator.Play("TestDead");
     }
 
     void OnCompleteAbility(FighterFightStatus fighter)
