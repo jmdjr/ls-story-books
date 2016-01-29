@@ -96,7 +96,7 @@ namespace Core.CombatSystem
                     winningTeam = GetWinner();
                 }
 
-                yield return new WaitForSeconds(0.05f);
+                yield return new WaitForSeconds(0.10f);
             }
 
             if (FoundWinner != null)

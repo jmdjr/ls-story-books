@@ -28,7 +28,7 @@ namespace Core
             this.Attack = Random.Range(3, 10);
             this.Defence = Random.Range(1, 5);
             this.Health = Random.Range(10, 50);
-            this.mappedSkin = Random.Range(0, 1) == 0 ? "Flare" : "Lola";
+            this.mappedSkin = Random.Range(0, 100) % 2 == 0 ? "Flare" : "Lola";
             this.Position = TeamPositionType.FRONTLINE;
             this.Name = MarkovGenerator.GenerateName(5, 8);
 
