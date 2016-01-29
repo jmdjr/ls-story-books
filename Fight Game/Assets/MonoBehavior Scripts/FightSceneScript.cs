@@ -131,8 +131,9 @@ public class FightSceneScript : MonoBehaviour {
             }
 
             Debug.Log(winningTeam.TeamInfo.TeamName + "is the winner!!!\n" + Fight.Alpha.DebugInfo() + "\n" + Fight.Beta.DebugInfo());
+            StartCoroutine(UpdateTeamText(Fight.Alpha, AlphaTextObject));
+            StartCoroutine(UpdateTeamText(Fight.Beta, BetaTextObject));
         }
-        
     }
 
     void OnApplicationQuit()
