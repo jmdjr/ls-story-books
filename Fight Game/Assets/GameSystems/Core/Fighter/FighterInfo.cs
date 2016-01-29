@@ -15,6 +15,8 @@ namespace Core
         public int Defence;
         public int Health;
         public int Experience;
+
+        public string mappedSkin;
         public List<int> Abilities;
 
         public TeamPositionType Position;
@@ -26,7 +28,7 @@ namespace Core
             this.Attack = Random.Range(3, 10);
             this.Defence = Random.Range(1, 5);
             this.Health = Random.Range(10, 50);
-
+            this.mappedSkin = Random.Range(0, 1) == 0 ? "Flare" : "Lola";
             this.Position = TeamPositionType.FRONTLINE;
             this.Name = MarkovGenerator.GenerateName(5, 8);
 
@@ -57,7 +59,7 @@ namespace Core
             clone.Position = this.Position;
             clone.Speed = this.Speed;
             clone.Name = this.Name;
-
+            clone.mappedSkin = this.mappedSkin;
             return clone;
         }
     }

@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 9328bff21b1b7a1419f11c2c7abf336c
-timeCreated: 1453926383
+timeCreated: 1454053609
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -30,10 +30,36 @@ TextureImporter:
     21300046: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_23
     21300048: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_24
     21300050: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_25
+    21300052: Flare_0
+    21300054: Flare_1
+    21300056: Flare_2
+    21300058: Flare_3
+    21300060: Flare_4
+    21300062: Flare_5
+    21300064: Flare_6
+    21300066: Flare_7
+    21300068: Flare_8
+    21300070: Flare_9
+    21300072: Flare_10
+    21300074: Flare_11
+    21300076: Flare_12
+    21300078: Flare_13
+    21300080: Flare_14
+    21300082: Flare_15
+    21300084: Flare_16
+    21300086: Flare_17
+    21300088: Flare_18
+    21300090: Flare_19
+    21300092: Flare_20
+    21300094: Flare_21
+    21300096: Flare_22
+    21300098: Flare_23
+    21300100: Flare_24
+    21300102: Flare_25
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     linearTexture: 0
     correctGamma: 0
     fadeOut: 0
@@ -76,7 +102,7 @@ TextureImporter:
   buildTargetSettings: []
   spriteSheet:
     sprites:
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_0
+    - name: Flare_0
       rect:
         serializedVersion: 2
         x: 116
@@ -94,7 +120,7 @@ TextureImporter:
         - {x: 44.5, y: -23}
         - {x: 44.5, y: -12}
         - {x: 6.5, y: 23}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_1
+    - name: Flare_1
       rect:
         serializedVersion: 2
         x: 223
@@ -113,7 +139,7 @@ TextureImporter:
         - {x: 46, y: -26.5}
         - {x: 46, y: 20.5}
         - {x: 42, y: 31.5}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_2
+    - name: Flare_2
       rect:
         serializedVersion: 2
         x: 323
@@ -130,7 +156,7 @@ TextureImporter:
         - {x: 33.5, y: -48}
         - {x: 33.5, y: 47}
         - {x: 30.5, y: 48}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_3
+    - name: Flare_3
       rect:
         serializedVersion: 2
         x: 412
@@ -148,7 +174,7 @@ TextureImporter:
         - {x: 32.5, y: -35}
         - {x: 32.5, y: -15}
         - {x: 13.5, y: 35}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_4
+    - name: Flare_4
       rect:
         serializedVersion: 2
         x: 495
@@ -168,7 +194,7 @@ TextureImporter:
         - {x: 32, y: -28}
         - {x: 32, y: 20}
         - {x: 27, y: 31}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_5
+    - name: Flare_5
       rect:
         serializedVersion: 2
         x: 578
@@ -189,7 +215,7 @@ TextureImporter:
         - {x: 8.5, y: -22}
         - {x: 6.5, y: -18}
         - {x: 3.5, y: -15}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_6
+    - name: Flare_6
       rect:
         serializedVersion: 2
         x: 661
@@ -209,7 +235,7 @@ TextureImporter:
         - {x: 17, y: -35}
         - {x: 17, y: 31}
         - {x: 13, y: 36}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_7
+    - name: Flare_7
       rect:
         serializedVersion: 2
         x: 15
@@ -226,7 +252,7 @@ TextureImporter:
         - {x: 20.5, y: -10}
         - {x: 17.5, y: 2}
         - {x: -0.5, y: 48}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_8
+    - name: Flare_8
       rect:
         serializedVersion: 2
         x: 91
@@ -258,7 +284,7 @@ TextureImporter:
         - {x: 12, y: -7.5}
         - {x: -1, y: 14.5}
         - {x: -11, y: 9.5}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_9
+    - name: Flare_9
       rect:
         serializedVersion: 2
         x: 186
@@ -275,7 +301,7 @@ TextureImporter:
         - {x: 34, y: -45}
         - {x: 34, y: 34}
         - {x: 21, y: 45}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_10
+    - name: Flare_10
       rect:
         serializedVersion: 2
         x: 267
@@ -298,7 +324,7 @@ TextureImporter:
         - {x: 9.5, y: -21.5}
         - {x: 7.5, y: -15.5}
         - {x: 3.5, y: -11.5}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_11
+    - name: Flare_11
       rect:
         serializedVersion: 2
         x: 353
@@ -317,7 +343,7 @@ TextureImporter:
         - {x: 32, y: -30}
         - {x: 32, y: 29}
         - {x: 30, y: 30}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_12
+    - name: Flare_12
       rect:
         serializedVersion: 2
         x: 440
@@ -334,7 +360,7 @@ TextureImporter:
         - {x: 23, y: -28}
         - {x: 23, y: 25}
         - {x: 20, y: 28}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_13
+    - name: Flare_13
       rect:
         serializedVersion: 2
         x: 506
@@ -353,7 +379,7 @@ TextureImporter:
         - {x: 25, y: 45}
         - {x: 0, y: 45}
         - {x: -22, y: 34}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_14
+    - name: Flare_14
       rect:
         serializedVersion: 2
         x: 585
@@ -371,7 +397,7 @@ TextureImporter:
         - {x: 20.5, y: 22}
         - {x: 2.5, y: 22}
         - {x: -20.5, y: 6}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_15
+    - name: Flare_15
       rect:
         serializedVersion: 2
         x: 653
@@ -389,7 +415,7 @@ TextureImporter:
         - {x: 22, y: -29}
         - {x: 22, y: 24}
         - {x: 18, y: 29}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_16
+    - name: Flare_16
       rect:
         serializedVersion: 2
         x: 212
@@ -418,7 +444,7 @@ TextureImporter:
         - {x: 20, y: -19.5}
         - {x: 16, y: -19.5}
         - {x: 12, y: -21.5}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_17
+    - name: Flare_17
       rect:
         serializedVersion: 2
         x: 301
@@ -448,7 +474,7 @@ TextureImporter:
         - {x: 15.5, y: -15}
         - {x: 18.5, y: -12}
         - {x: 18.5, y: -11}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_18
+    - name: Flare_18
       rect:
         serializedVersion: 2
         x: 382
@@ -467,7 +493,7 @@ TextureImporter:
         - {x: 8, y: -27}
         - {x: 33, y: -8}
         - {x: 33, y: 27}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_19
+    - name: Flare_19
       rect:
         serializedVersion: 2
         x: 465
@@ -491,7 +517,7 @@ TextureImporter:
         - {x: 23.5, y: -31.5}
         - {x: 27.5, y: -25.5}
         - {x: 27.5, y: 10.5}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_20
+    - name: Flare_20
       rect:
         serializedVersion: 2
         x: 541
@@ -507,7 +533,7 @@ TextureImporter:
         - {x: -13, y: -39}
         - {x: 29, y: -39}
         - {x: 29, y: 39}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_21
+    - name: Flare_21
       rect:
         serializedVersion: 2
         x: 623
@@ -527,7 +553,7 @@ TextureImporter:
         - {x: 12.5, y: -21}
         - {x: 30.5, y: 15}
         - {x: 30.5, y: 26}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_22
+    - name: Flare_22
       rect:
         serializedVersion: 2
         x: 293
@@ -546,7 +572,7 @@ TextureImporter:
         - {x: 23.5, y: -32}
         - {x: 23.5, y: 20}
         - {x: 18.5, y: 33}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_23
+    - name: Flare_23
       rect:
         serializedVersion: 2
         x: 381
@@ -564,7 +590,7 @@ TextureImporter:
         - {x: 36.5, y: -20}
         - {x: 36.5, y: 32}
         - {x: 15.5, y: 40}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_24
+    - name: Flare_24
       rect:
         serializedVersion: 2
         x: 465
@@ -596,7 +622,7 @@ TextureImporter:
         - {x: 5, y: -12}
         - {x: 4, y: -10}
         - {x: -4, y: -10}
-    - name: flare_sprite_sheet__battle__by_gambiller-d5ktgi5_25
+    - name: Flare_25
       rect:
         serializedVersion: 2
         x: 590

@@ -10,12 +10,12 @@ public class FighterScript : MonoBehaviour
     public FighterFightStatus reference;
     public FighterInfo FighterInfo;
     public FighterInfo BaseStats;
+
     // Use this for initialization
     private Vector3 stepForward;
     private Vector3 stepBack;
     private Vector3 stepBlock;
     private Vector3 stepDead;
-    private bool isAnimating;
 
     private Animator animator;
 
@@ -25,7 +25,6 @@ public class FighterScript : MonoBehaviour
 
     void Awake()
     {
-
     }
 
 	void Start ()
@@ -34,22 +33,23 @@ public class FighterScript : MonoBehaviour
         {
             FighterInfo = reference.Info;
             BaseStats = reference.fighter.Info;
-            this.name = FighterInfo.Name;
+            name = FighterInfo.Name;
 
-            this.reference.OnActivateAbility += OnActivateAbility;
-            this.reference.OnCompleteAbility += OnCompleteAbility;
-            this.reference.OnDeath += OnDeath;
-            this.reference.OnDamage += OnDamage;
-            this.reference.OnDefend += OnDefend;
+            reference.OnActivateAbility += OnActivateAbility;
+            reference.OnCompleteAbility += OnCompleteAbility;
+            reference.OnDeath += OnDeath;
+            reference.OnDamage += OnDamage;
+            reference.OnDefend += OnDefend;
 
-            Vector3 temp = this.transform.localPosition;
+            Vector3 temp = transform.localPosition;
             stepBack = new Vector3(temp.x, temp.y, temp.z);
             stepForward = new Vector3(stepBack.x + 1, stepBack.y, stepBack.z);
             stepDead = new Vector3(temp.x - 2, temp.y, temp.z);
             stepBlock = new Vector3(temp.x -1, temp.y, temp.z);
-            isAnimating = false;
 
-            this.animator = GetComponent<Animator>();
+            animator = GetComponent<Animator>();
+            GameControlScript control = GameControlScript.control;
+            this.animator.runtimeAnimatorController = control.ACreferences.FromName(reference.Info.mappedSkin);
         }
 	}
 
@@ -70,7 +70,7 @@ public class FighterScript : MonoBehaviour
         }
     }
 
-    void OnDamage(FighterFightStatus fighter)
+    void OnDamage(FighterFightStatus fighter, int amount)
     {
         if (fighter.isAlive() && !fighter.IsAnimating)
         {
@@ -78,7 +78,7 @@ public class FighterScript : MonoBehaviour
         }
     }
 
-    void OnDefend(FighterFightStatus fighter)
+    void OnDefend(FighterFightStatus fighter, int amount)
     {
         StartCoroutine(DefendStance());
     }
@@ -93,8 +93,6 @@ public class FighterScript : MonoBehaviour
 
             if (state.Length > 0)
             {
-                // we got an issue...
-
                 List<AnimatorClipInfo> clips = new List<AnimatorClipInfo>(state);
                 AnimationClip clip = clips.ConvertAll<AnimationClip>(obj => obj.clip).FirstOrDefault();
 
@@ -119,7 +117,7 @@ public class FighterScript : MonoBehaviour
         yield return new WaitForSeconds(getAnimationLength());
 
         //this.animator.SetBool("IsAttacking", false);
-        this.animator.Play("Test");
+        this.animator.Play("TestIdle");
         this.transform.localPosition = stepBack;
         reference.IsAnimating = false;
     }

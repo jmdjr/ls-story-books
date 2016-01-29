@@ -21,7 +21,6 @@ public class FightSceneScript : MonoBehaviour {
     private GameObject AlphaTextObject;
     private GameObject BetaTextObject;
 
-    private bool runFight = true;
     void Start()
     {
         controlReference = GameControlScript.control;
@@ -30,15 +29,15 @@ public class FightSceneScript : MonoBehaviour {
         InitializeFight();
         GenerateTeamsGameObjects();
 
-        Debug.Log("Fight Beginning...");
-        Debug.Log(this.Fight.Alpha.DebugInfo() + "\n" + this.Fight.Beta.DebugInfo());
-        this.Fight.TeamUpdate += onTeamUpdate;
+        Debug.Log("Fight Beginning...\n" + Fight.Alpha.DebugInfo() + "\n" + Fight.Beta.DebugInfo());
+        Fight.PostStepUpdate += onTeamUpdate;
+        Fight.FoundWinner += onFoundWinner;
 
         if (StatBoard != null)
         {
             GameObject board = Instantiate<GameObject>(StatBoard);
 
-            board.transform.SetParent(this.transform);
+            board.transform.SetParent(transform);
 
             if (TextPrefab != null)
             {
@@ -52,106 +51,73 @@ public class FightSceneScript : MonoBehaviour {
                 BetaTextObject.transform.SetParent(board.transform);
                 BetaTextObject.transform.localPosition = new Vector3(100, -50, 0);
             }
-
         }
     }
     
-
     void InitializeFight()
     {
-
         if (managerReference.ActiveTeam == null)
         {
-            this.yourTeam = managerReference.SelectTeam();
+            yourTeam = managerReference.SelectTeam();
         }
         else
         {
-            this.yourTeam = managerReference.ActiveTeam;
+            yourTeam = managerReference.ActiveTeam;
         }
 
-
-        FighterTeam AlphaTeam = this.yourTeam;
-        this.yourTeam.Info.TeamName = "Alpha Team";
+        FighterTeam AlphaTeam = yourTeam;
+        yourTeam.Info.TeamName = "Alpha Team";
 
         FighterTeamInfo betaInfo = new FighterTeamInfo(true);
         FighterTeam BetaTeam = new FighterTeam(betaInfo);
         betaInfo.TeamName = "Beta Team";
 
         Fight = new Fight(AlphaTeam, BetaTeam);
+
+        StartCoroutine(Fight.Run());
     }
     void GenerateTeamsGameObjects()
     {
-        GameObject alphaTeamObject = Instantiate<GameObject>(TeamPrefab);
-        GameObject betaTeamObject = Instantiate<GameObject>(TeamPrefab);
+        GameObject teamObject = Instantiate<GameObject>(TeamPrefab);
 
-        alphaTeamObject.transform.SetParent(this.transform);
-        betaTeamObject.transform.SetParent(this.transform);
+        teamObject.transform.SetParent(transform);
+        teamObject.GetComponent<TeamFightScript>().reference = Fight.Alpha;
+        teamObject.transform.localPosition = new Vector3(-3, 1, 0);
+        teamObject.name = Fight.Alpha.TeamInfo.TeamName;
 
-        alphaTeamObject.GetComponent<TeamFightScript>().reference = this.Fight.Alpha;
-        betaTeamObject.GetComponent<TeamFightScript>().reference = this.Fight.Beta;
-
-        alphaTeamObject.transform.localPosition = new Vector3(-3, 1, 0);
-        betaTeamObject.transform.localPosition = new Vector3(3, 1, 0);
-        betaTeamObject.transform.Rotate(new Vector3(0, 180, 0));
-
-        alphaTeamObject.name = this.Fight.Alpha.TeamInfo.TeamName;
-        betaTeamObject.name = this.Fight.Beta.TeamInfo.TeamName;
+        teamObject = Instantiate<GameObject>(TeamPrefab);
+        teamObject.transform.SetParent(transform);
+        teamObject.GetComponent<TeamFightScript>().reference = Fight.Beta;
+        teamObject.transform.localPosition = new Vector3(3, 1, 0);
+        teamObject.transform.Rotate(new Vector3(0, 180, 0));
+        teamObject.name = Fight.Beta.TeamInfo.TeamName;
     }
 
     // Update is called once per framee
     void Update()
     {
-        if (this.runFight)
-        {
-            StartCoroutine(RunFight());
-            this.runFight = false;
-        }
-    }
-
-    bool anyoneAnimating(Fight fight)
-    {
-        return fight.FightOrder.TrueForAll(fighter => { return !fighter.IsAnimating; });
-
-    }
-    IEnumerator RunFight()
-    {
-        if(this.Fight != null) 
-        {
-            FighterTeamFightStatus winningTeam = this.Fight.GetWinner();
-
-            while (winningTeam == null)
-            {
-                if (anyoneAnimating(this.Fight))
-                {
-                    this.Fight.StepFight();
-                    winningTeam = this.Fight.GetWinner();
-                }
-
-                yield return new WaitForSeconds(0.10f);
-            }
-
-            Debug.Log(winningTeam.TeamInfo.TeamName + "is the winner!!!\n" + Fight.Alpha.DebugInfo() + "\n" + Fight.Beta.DebugInfo());
-            StartCoroutine(UpdateTeamText(Fight.Alpha, AlphaTextObject));
-            StartCoroutine(UpdateTeamText(Fight.Beta, BetaTextObject));
-        }
     }
 
     void OnApplicationQuit()
     {
     }
-    private bool textRoutinesLaunched = false;
+
     void onTeamUpdate(FighterTeamFightStatus Alpha, FighterTeamFightStatus Beta)
     {
-        StartCoroutine(UpdateTeamText(Alpha, AlphaTextObject));
-        StartCoroutine(UpdateTeamText(Beta, BetaTextObject));
+        UpdateTeamText(Alpha, AlphaTextObject);
+        UpdateTeamText(Beta, BetaTextObject);
     }
 
-    IEnumerator UpdateTeamText(FighterTeamFightStatus team, GameObject textObject)
+    void onFoundWinner(FighterTeamFightStatus Winner)
     {
-        if (team.anyoneLeftAlive() && textObject != null)
+        Debug.Log(Winner.TeamInfo.TeamName + "is the winner!!!\n" + Fight.Alpha.DebugInfo() + "\n" + Fight.Beta.DebugInfo());
+    }
+
+    void UpdateTeamText(FighterTeamFightStatus team, GameObject textObject)
+    {
+        if (textObject != null)
         {
             textObject.GetComponent<Text>().text = TeamTextPrint(team);
-            yield return 0;
         }
     }
 

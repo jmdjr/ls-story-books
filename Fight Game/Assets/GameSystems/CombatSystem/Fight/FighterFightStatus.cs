@@ -6,7 +6,7 @@ namespace Core.CombatSystem
     public class FighterFightStatus
     {
         public delegate void ReportFightStatus(FighterFightStatus fighterStatus);
-
+        public delegate void ReportEffectAmountStatus(FighterFightStatus fighterStatus, int amount);
         // this info should be able to be altered 
         public Fighter fighter;
         public FighterInfo Info;
@@ -15,20 +15,16 @@ namespace Core.CombatSystem
         private int idleTime;
         public bool IsDead = false;
         public bool IsAnimating = false;
-        public int RealAttack
-        {
-            get {
-                return this.Info.Attack;
-            }
-        }
+
+        public int RealAttack { get { return this.Info.Attack; } }
 
         public event ReportFightStatus OnWindup;
         public event ReportFightStatus OnActivateAbility;
         public event ReportFightStatus OnCompleteAbility;
         public event ReportFightStatus OnDeath;
-        public event ReportFightStatus OnDamage;
-        public event ReportFightStatus OnDefend;
-        public event ReportFightStatus OnHeal;
+        public event ReportEffectAmountStatus OnDamage;
+        public event ReportEffectAmountStatus OnDefend;
+        public event ReportEffectAmountStatus OnHeal;
 
         public int IdleTime()
         {
@@ -88,12 +84,12 @@ namespace Core.CombatSystem
 
                 if (OnDamage != null && trueDamage > 0)
                 {
-                    this.OnDamage(this);
+                    this.OnDamage(this, trueDamage);
                 }
 
                 if (trueDamage == 0 && OnDefend != null)
                 {
-                    OnDefend(this);
+                    OnDefend(this, amount);
                 }
 
                 this.Info.Health -= trueDamage;
@@ -103,7 +99,7 @@ namespace Core.CombatSystem
                 // healing damage
                 if (OnHeal != null)
                 {
-                    this.OnHeal(this);
+                    this.OnHeal(this, amount);
                 }
                 this.Info.Health += amount;
             }

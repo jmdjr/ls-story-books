@@ -9,6 +9,7 @@ public class GameControlScript: MonoBehaviour
 {
     public static GameControlScript control;
     private Manager manager = null;
+    public AnimationControllerReferenceSystem ACreferences;
     public Manager Manager {
         get
         {

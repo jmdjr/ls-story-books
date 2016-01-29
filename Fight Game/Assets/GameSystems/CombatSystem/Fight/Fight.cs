@@ -14,22 +14,20 @@ namespace Core.CombatSystem
 
         public List<FighterFightStatus> FightOrder;
 
-        public delegate void TeamStatusUpdate(FighterTeamFightStatus Alpha, FighterTeamFightStatus Beta);
-        public event TeamStatusUpdate TeamUpdate;
+        public delegate void StatusUpdate(FighterTeamFightStatus Alpha, FighterTeamFightStatus Beta);
+        public delegate void WinnerUpdate(FighterTeamFightStatus Winner);
+        public event StatusUpdate PostStepUpdate;
+        public event WinnerUpdate FoundWinner;
 
         public Fight(FighterTeam alpha, FighterTeam beta)
         {
-            this.Alpha = new FighterTeamFightStatus(alpha);
-            this.Beta = new FighterTeamFightStatus(beta);
+            Alpha = new FighterTeamFightStatus(alpha);
+            Beta = new FighterTeamFightStatus(beta);
             
             FightOrder = new List<FighterFightStatus>();
 
-            FightOrder.AddRange(this.Alpha.SetupFightStatus());
-            FightOrder.AddRange(this.Beta.SetupFightStatus());
-            FightOrder.Sort((fighter1, fighter2) => { return fighter1.Info.Speed.CompareTo(fighter2.Info.Speed); });
-
-
-            // Each fighter is now initialized with Fight info, which tracks their idle timers and is used to determine if they are ready or not.
+            FightOrder.AddRange(Alpha.SetupFightStatus());
+            FightOrder.AddRange(Beta.SetupFightStatus());
         }
         private FighterFightStatus getNextFighter()
         {
@@ -39,16 +37,16 @@ namespace Core.CombatSystem
         {
             return FightOrder.Where((f) => f.isAlive()).ToList();
         }
-        //May convert this into an Enumerator for use in Coroutines or something, but this is the fight cycle.
+
         public void StepFight()
         {
             // runs the basic steps in combat, through one cycle.
             // get next available fighter, if none, step everyone's counters. 
-            FighterFightStatus activeFighter = this.getNextFighter();
+            FighterFightStatus activeFighter = getNextFighter();
 
             if (activeFighter != null)
             {
-                FighterTeamFightStatus OtherTeam = activeFighter.Team == this.Alpha ? this.Beta : this.Alpha;
+                FighterTeamFightStatus OtherTeam = activeFighter.Team == Alpha ? Beta : Alpha;
                 activeFighter.ActivateAbility(OtherTeam);
             }
             else
@@ -56,11 +54,10 @@ namespace Core.CombatSystem
                 ActiveFighters().ForEach((f) => f.StepIdle());
             }
 
-            if (this.TeamUpdate != null)
+            if (PostStepUpdate != null)
             {
-                this.TeamUpdate(Alpha, Beta);
+                PostStepUpdate(Alpha, Beta);
             }
-
         }
 
         public bool HasWinner()
@@ -80,6 +77,32 @@ namespace Core.CombatSystem
             }
 
             return null;
+        }
+
+        bool anyoneAnimating()
+        {
+            return FightOrder.TrueForAll(fighter => { return !fighter.IsAnimating; });
+        }
+
+        public IEnumerator Run()
+        {
+            FighterTeamFightStatus winningTeam = GetWinner();
+
+            while (winningTeam == null)
+            {
+                if (anyoneAnimating())
+                {
+                    StepFight();
+                    winningTeam = GetWinner();
+                }
+
+                yield return new WaitForSeconds(0.05f);
+            }
+
+            if (FoundWinner != null)
+            {
+                FoundWinner(Alpha);
+            }
         }
     }
 }
